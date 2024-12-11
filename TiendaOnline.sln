@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Web", "TiendaOnline.Web.csproj", "{273B5921-B658-4D39-B352-C0C05A54C338}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Core", "..\TiendaOnline.Core\TiendaOnline.Core.csproj", "{5475AC9F-1E47-40C0-98CD-E9F79DA52016}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Application", "..\TiendaOnline.Application\TiendaOnline.Application.csproj", "{6F586986-CB33-41C4-ABF5-9F113C350C66}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.DAL", "..\TiendaOnline.DAL\TiendaOnline.DAL.csproj", "{4BAD15C5-4603-4E65-9EB3-72B23E552B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Infrastructure", "..\TiendaOnline.Infrastructure\TiendaOnline.Infrastructure.csproj", "{46E934C5-4CA3-4F54-AAB6-8587017997D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Services", "..\TiendaOnline.Services\TiendaOnline.Services.csproj", "{BDC6674D-538E-4FB9-9DF1-6BA2831C6326}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{273B5921-B658-4D39-B352-C0C05A54C338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{273B5921-B658-4D39-B352-C0C05A54C338}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{273B5921-B658-4D39-B352-C0C05A54C338}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{273B5921-B658-4D39-B352-C0C05A54C338}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5475AC9F-1E47-40C0-98CD-E9F79DA52016}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5475AC9F-1E47-40C0-98CD-E9F79DA52016}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5475AC9F-1E47-40C0-98CD-E9F79DA52016}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5475AC9F-1E47-40C0-98CD-E9F79DA52016}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F586986-CB33-41C4-ABF5-9F113C350C66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F586986-CB33-41C4-ABF5-9F113C350C66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F586986-CB33-41C4-ABF5-9F113C350C66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F586986-CB33-41C4-ABF5-9F113C350C66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BAD15C5-4603-4E65-9EB3-72B23E552B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BAD15C5-4603-4E65-9EB3-72B23E552B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BAD15C5-4603-4E65-9EB3-72B23E552B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BAD15C5-4603-4E65-9EB3-72B23E552B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E934C5-4CA3-4F54-AAB6-8587017997D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E934C5-4CA3-4F54-AAB6-8587017997D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E934C5-4CA3-4F54-AAB6-8587017997D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E934C5-4CA3-4F54-AAB6-8587017997D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDC6674D-538E-4FB9-9DF1-6BA2831C6326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDC6674D-538E-4FB9-9DF1-6BA2831C6326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDC6674D-538E-4FB9-9DF1-6BA2831C6326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDC6674D-538E-4FB9-9DF1-6BA2831C6326}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {825167EC-6A65-4447-93A5-D87F75AA93D1}
+	EndGlobalSection
+EndGlobal
