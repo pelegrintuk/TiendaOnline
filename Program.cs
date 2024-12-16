@@ -1,30 +1,47 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TiendaOnline.Web.Data;
+using TiendaOnline.DAL; // Importar TiendaContext
+using TiendaOnline.Core.Entities; // Importar ApplicationUser
+using TiendaOnline.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+// Configurar la cadena de conexión
+var connectionString = builder.Configuration.GetConnectionString("TiendaDB")
+    ?? throw new InvalidOperationException("Connection string 'TiendaDB' not found.");
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// Configurar el contexto de datos con EF Core
+builder.Services.AddDbContext<TiendaContext>(options =>
+    options.UseSqlServer(connectionString));
+
+// Configurar Identity con la clase personalizada ApplicationUser
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;  // Confirmación de correo
+    options.Password.RequireDigit = true;           // Contraseñas fuertes
+    options.Password.RequiredLength = 8;            // Longitud mínima de 8
+    options.Password.RequireUppercase = true;       // Al menos una letra mayúscula
+})
+.AddEntityFrameworkStores<TiendaContext>();
+
+// Agregar soporte para Razor Pages
+builder.Services.AddRazorPages();
+
+// Registrar servicios de APPLICATION
+builder.Services.AddApplication();
+
+// Otros servicios (DB Context, Identity, etc.)
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+    app.UseDeveloperExceptionPage();
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -33,11 +50,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication();  // Habilitar autenticación
+app.UseAuthorization();   // Habilitar autorización
+
+// Mapear rutas de Razor Pages para Identity
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
 
 app.Run();

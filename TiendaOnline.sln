@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Web", "TiendaOnline.Web.csproj", "{273B5921-B658-4D39-B352-C0C05A54C338}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4BAD15C5-4603-4E65-9EB3-72B23E552B62} = {4BAD15C5-4603-4E65-9EB3-72B23E552B62}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Core", "..\TiendaOnline.Core\TiendaOnline.Core.csproj", "{5475AC9F-1E47-40C0-98CD-E9F79DA52016}"
 EndProject
