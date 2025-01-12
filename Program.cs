@@ -1,40 +1,51 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TiendaOnline.DAL; // Importar TiendaContext
-using TiendaOnline.Core.Entities; // Importar ApplicationUser
+using TiendaOnline.DAL;
+using TiendaOnline.Core.Entities;
 using TiendaOnline.Application;
+using TiendaOnline.Infrastructure;
+using TiendaOnline.Infrastructure.DependencyInjection;
+using AutoMapper;
+using TiendaOnline.Application.Mapping;
+using TiendaOnline.Application.Interfaces;
+using TiendaOnline.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar la cadena de conexión
-var connectionString = builder.Configuration.GetConnectionString("TiendaDB")
-    ?? throw new InvalidOperationException("Connection string 'TiendaDB' not found.");
+// Configurar la cadena de conexión desde el archivo de configuración
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
-// Configurar el contexto de datos con EF Core
-builder.Services.AddDbContext<TiendaContext>(options =>
-    options.UseSqlServer(connectionString));
+// Configurar el contexto de datos con EF Core desde TiendaOnline.DAL
+builder.Services.AddDAL(builder.Configuration);
 
 // Configurar Identity con la clase personalizada ApplicationUser
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true;  // Confirmación de correo
+    options.SignIn.RequireConfirmedAccount = false; // Deshabilitar confirmación de correo para pruebas
     options.Password.RequireDigit = true;           // Contraseñas fuertes
     options.Password.RequiredLength = 8;            // Longitud mínima de 8
     options.Password.RequireUppercase = true;       // Al menos una letra mayúscula
 })
-.AddEntityFrameworkStores<TiendaContext>();
+.AddEntityFrameworkStores<TiendaContext>()
+.AddDefaultTokenProviders(); // Proveedores de tokens para autenticación y recuperación de contraseñas
 
-// Agregar soporte para Razor Pages
-builder.Services.AddRazorPages();
-
-// Registrar servicios de APPLICATION
-builder.Services.AddApplication();
-
-// Otros servicios (DB Context, Identity, etc.)
+// Agregar controladores con vistas
 builder.Services.AddControllersWithViews();
+
+// Registrar servicios de Application e Infrastructure
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure();
+
+// Agregar AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Configurar servicios adicionales específicos
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
+// Configurar el entorno de desarrollo o producción
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -45,19 +56,17 @@ else
     app.UseHsts();
 }
 
+// Configuración intermedia
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
+app.UseAuthentication(); // Habilitar autenticación
+app.UseAuthorization();  // Habilitar autorización
 
-app.UseAuthentication();  // Habilitar autenticación
-app.UseAuthorization();   // Habilitar autorización
-
-// Mapear rutas de Razor Pages para Identity
-app.MapRazorPages();
-
+// Mapear rutas de controladores MVC
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Ejecutar la aplicación
 app.Run();

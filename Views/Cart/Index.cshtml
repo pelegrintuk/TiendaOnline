@@ -1,0 +1,37 @@
+﻿@model TiendaOnline.Application.DTOs.CartDto
+
+@{
+    ViewData["Title"] = "Carrito de Compras";
+}
+
+<h1>Carrito de Compras</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Price.ToString("C")</td>
+                <td>@item.Quantity</td>
+                <td>@(item.Price * item.Quantity).ToString("C")</td>
+                <td>
+                    <form asp-action="Remove" method="post">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p><strong>Total: @Model.TotalPrice.ToString("C")</strong></p>
+<a href="@Url.Action("Checkout", "Orders")" class="btn btn-success">Proceder al Pago</a>

@@ -1,0 +1,30 @@
+﻿@model TiendaOnline.Application.DTOs.OrderDto
+
+@{
+    ViewData["Title"] = "Detalles del Pedido";
+}
+
+<h1>Detalles del Pedido #@Model.Id</h1>
+<p><strong>Fecha:</strong> @Model.Date.ToShortDateString()</p>
+<p><strong>Estado:</strong> @Model.Status</p>
+<h3>Artículos</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Precio</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.ProductPrice.ToString("C")</td>
+                <td>@item.Quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="@Url.Action("Index", "Orders")" class="btn btn-primary">Volver a Pedidos</a>

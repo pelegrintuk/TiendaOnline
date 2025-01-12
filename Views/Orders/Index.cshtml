@@ -1,0 +1,30 @@
+﻿@model IEnumerable<TiendaOnline.Application.DTOs.OrderDto>
+
+@{
+    ViewData["Title"] = "Pedidos";
+}
+
+<h1>Lista de Pedidos</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.Date.ToShortDateString()</td>
+                <td>@order.Status</td>
+                <td>
+                    <a href="@Url.Action("Details", "Orders", new { id = order.Id })" class="btn btn-info">Detalles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

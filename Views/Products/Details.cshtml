@@ -1,0 +1,11 @@
+﻿@model TiendaOnline.Application.DTOs.ProductDto
+
+@{
+    ViewData["Title"] = "Detalles del Producto";
+}
+
+<h1>@Model.Name</h1>
+<p><strong>Descripción:</strong> @Model.Description</p>
+<p><strong>Precio:</strong> @Model.Price.ToString("C")</p>
+<p><strong>Stock:</strong> @Model.Stock</p>
+<a href="@Url.Action("Index", "Products")" class="btn btn-primary">Volver a la Lista</a>

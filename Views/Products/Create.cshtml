@@ -1,0 +1,26 @@
+﻿@model TiendaOnline.Application.DTOs.ProductDto
+
+@{
+    ViewData["Title"] = "Crear Producto";
+}
+
+<h1>Crear Nuevo Producto</h1>
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label for="Name" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="Name" name="Name" required>
+    </div>
+    <div class="mb-3">
+        <label for="Description" class="form-label">Descripción</label>
+        <textarea class="form-control" id="Description" name="Description" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="Price" class="form-label">Precio</label>
+        <input type="number" class="form-control" id="Price" name="Price" step="0.01" required>
+    </div>
+    <div class="mb-3">
+        <label for="Stock" class="form-label">Stock</label>
+        <input type="number" class="form-control" id="Stock" name="Stock" required>
+    </div>
+    <button type="submit" class="btn btn-success">Crear</button>
+</form>

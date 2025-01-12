@@ -1,32 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using TiendaOnline.Web.Models;
+using TiendaOnline.Application.Interfaces;
 
 namespace TiendaOnline.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IProductService _productService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IProductService productService)
         {
-            _logger = logger;
+            _productService = productService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            // Obtener productos destacados
+            var featuredProducts = await _productService.GetFeaturedProductsAsync();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            // Obtener categorías únicas desde los productos
+            var allProducts = await _productService.GetAllProductsAsync();
+            var categories = allProducts
+                .Select(p => p.Category)
+                .Distinct()
+                .Where(c => !string.IsNullOrEmpty(c))
+                .ToList();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            ViewBag.Categories = categories; // Pasar categorías a la vista
+            return View(featuredProducts);
         }
     }
 }

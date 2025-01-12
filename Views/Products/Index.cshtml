@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TiendaOnline.Application.DTOs.ProductDto>
+
+@{
+    ViewData["Title"] = "Productos";
+}
+
+<h1>Lista de Productos</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price.ToString("C")</td>
+                <td>
+                    <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="btn btn-info">Detalles</a>
+                    <a href="@Url.Action("Edit", "Products", new { id = product.Id })" class="btn btn-warning">Editar</a>
+                    <a href="@Url.Action("Delete", "Products", new { id = product.Id })" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="@Url.Action("Create", "Products")" class="btn btn-success">Añadir Producto</a>

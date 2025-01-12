@@ -1,48 +1,118 @@
-﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿/* Barra de navegación */
+.navbar {
+    background-color: #007bff;
+    color: white;
 }
+
+.navbar-nav .nav-item .nav-link {
+    color: white; /* Color de los enlaces */
+}
+
+    .navbar-nav .nav-item .nav-link:hover {
+        color: #1b6ec2; /* Color al pasar el ratón */
+    }
+
+.navbar-toggler {
+    border-color: #0077cc;
+}
+
+.navbar-toggler-icon {
+    background-color: #0077cc;
+}
+
+/* Estilo para los botones */
+.btn-primary {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+    .btn-primary:hover {
+        background-color: #1861ac;
+        border-color: #1b6ec2;
+    }
+
+/* Pie de página */
+.footer {
+    background-color: #f8f9fa;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px 0;
+    text-align: center;
+}
+
+    .footer a {
+        color: #0077cc;
+    }
+
+        .footer a:hover {
+            color: #0056b3;
+        }
+
+/* Enlaces en la barra de navegación */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.carousel-inner img {
+    max-height: 400px;
+    object-fit: cover;
+}
+
+h3 {
+    margin-top: 1rem;
+    color: #0056b3;
+}
+
+.list-group-item a {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+    .list-group-item a:hover {
+        text-decoration: underline;
+    }
 
 a {
-  color: #0077cc;
+    color: #0077cc;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+/* Campo de texto y formularios */
+input.form-control {
+    border-radius: 0.375rem;
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+}
+
+    input.form-control:focus {
+        border-color: #1b6ec2;
+    }
+
+/* Efectos generales */
+.box-shadow {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+/* Responsividad */
+@media (max-width: 576px) {
+    .navbar-collapse {
+        justify-content: space-between;
+    }
+
+    .footer {
+        position: relative;
+        bottom: 0;
+    }
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 1rem;
 }
