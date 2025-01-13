@@ -30,6 +30,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<TiendaContext>()
 .AddDefaultTokenProviders(); // Proveedores de tokens para autenticación y recuperación de contraseñas
 
+builder.Services.AddHttpClient("ApiClient", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7242/"); // URL base de la API de servicios
+});
+
 // Agregar controladores con vistas
 builder.Services.AddControllersWithViews();
 

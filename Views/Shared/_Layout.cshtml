@@ -24,11 +24,30 @@
                     </form>
                     <ul class="navbar-nav ms-3">
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="@Url.Action("Index", "Cart")">Carrito</a>
+                            <a class="nav-link text-white" href="@Url.Action("Index", "Cart", new { area = "" })">Carrito</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="@Url.Action("Index", "Account")">Perfil</a>
-                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-3">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="@Url.Action("Index", "Account")">Perfil</a>
+                            </li>
+                            <li class="nav-item">
+                                <form method="post" action="/api/Auth/logout" class="d-inline">
+                                    <button class="btn btn-link nav-link text-white" type="submit">Cerrar Sesión</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/Account/Login">Iniciar Sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/Account/Register">Registrarse</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

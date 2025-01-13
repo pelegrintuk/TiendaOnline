@@ -1,37 +1,89 @@
-﻿@model TiendaOnline.Application.DTOs.CartDto
-
-@{
+﻿@{
     ViewData["Title"] = "Carrito de Compras";
 }
 
 <h1>Carrito de Compras</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th>Cantidad</th>
-            <th>Total</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Items)
-        {
-            <tr>
-                <td>@item.ProductName</td>
-                <td>@item.Price.ToString("C")</td>
-                <td>@item.Quantity</td>
-                <td>@(item.Price * item.Quantity).ToString("C")</td>
-                <td>
-                    <form asp-action="Remove" method="post">
-                        <input type="hidden" name="productId" value="@item.ProductId" />
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </td>
-            </tr>
+
+@if (!User.Identity.IsAuthenticated)
+{
+    <p>Inicia sesión para ver los productos en tu carrito.</p>
+    <a href="/Account/Login" class="btn btn-primary">Iniciar Sesión</a>
+    <a href="/Account/Register" class="btn btn-secondary">Registrarse</a>
+}
+else
+{
+    <div id="cart-container">
+        <!-- Aquí se renderizarán los items del carrito -->
+        <p>Cargando carrito...</p>
+    </div>
+
+    <script>
+        const userId = '@User.Identity.Name'; // Usuario autenticado
+
+        async function loadCart() {
+            try {
+                const response = await fetch(`/api/Cart/${userId}`);
+                if (response.ok) {
+                    const cart = await response.json();
+                    renderCart(cart);
+                } else {
+                    document.getElementById('cart-container').innerHTML = '<p>El carrito está vacío.</p>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('cart-container').innerHTML = '<p>Error al cargar el carrito</p>';
+            }
         }
-    </tbody>
-</table>
-<p><strong>Total: @Model.TotalPrice.ToString("C")</strong></p>
-<a href="@Url.Action("Checkout", "Orders")" class="btn btn-success">Proceder al Pago</a>
+
+        function renderCart(cart) {
+            if (!cart.items || cart.items.length === 0) {
+                document.getElementById('cart-container').innerHTML = '<p>El carrito está vacío.</p>';
+                return;
+            }
+
+            let html = `
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+            cart.items.forEach(item => {
+                html += `
+                            <tr>
+                                <td>${item.productName}</td>
+                                <td>${item.price.toFixed(2)} €</td>
+                                <td>${item.quantity}</td>
+                                <td>${(item.price * item.quantity).toFixed(2)} €</td>
+                                <td>
+                                    <button class="btn btn-danger" onclick="removeFromCart(${item.productId})">Eliminar</button>
+                                </td>
+                            </tr>`;
+            });
+            html += `</tbody></table>
+                        <p><strong>Total: ${cart.totalPrice.toFixed(2)} €</strong></p>
+                        <a href="/Orders/Checkout" class="btn btn-success">Proceder al Pago</a>`;
+            document.getElementById('cart-container').innerHTML = html;
+        }
+
+        async function removeFromCart(productId) {
+            try {
+                const response = await fetch(`/api/Cart/${userId}/items/${productId}`, { method: 'DELETE' });
+                if (response.ok) {
+                    loadCart(); // Recargar carrito
+                } else {
+                    console.error('Error al eliminar el producto');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        loadCart(); // Cargar el carrito al iniciar
+    </script>
+}
