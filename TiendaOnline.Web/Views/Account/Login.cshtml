@@ -1,13 +1,36 @@
 ﻿@model TiendaOnline.Services.DTOs.LoginDto
 
-<form method="post" action="/Account/Login">
-    <div>
-        <label for="username">Usuario:</label>
-        <input type="text" id="username" name="Username" />
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h2 class="text-center">Iniciar Sesión</h2>
+
+            <!-- Mensajes de éxito y error -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <form method="post" action="/Account/Login" class="needs-validation mt-4" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Usuario:</label>
+                    <input type="text" id="username" name="Username" class="form-control" value="@Model?.Username" required />
+                    <div class="invalid-feedback">Por favor, introduce tu usuario.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" id="password" name="Password" class="form-control" required />
+                    <div class="invalid-feedback">Por favor, introduce tu contraseña.</div>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="Password" />
-    </div>
-    <button type="submit">Iniciar sesión</button>
-</form>
+</div>
+

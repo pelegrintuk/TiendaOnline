@@ -25,11 +25,14 @@ namespace TiendaOnline.Services.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
 
-            if (!result.Succeeded) return Unauthorized("Credenciales inválidas");
+            if (!result.Succeeded)
+            {
+                return Unauthorized(new { message = "Credenciales inválidas" });
+            }
 
-            return Ok("Inicio de sesión exitoso");
+            return Ok(new { message = "Inicio de sesión exitoso" });
         }
 
         [HttpPost("register")]

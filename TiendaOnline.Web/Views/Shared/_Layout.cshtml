@@ -23,15 +23,10 @@
                         <button class="btn btn-light" type="submit">Buscar</button>
                     </form>
                     <ul class="navbar-nav ms-3">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="@Url.Action("Index", "Cart", new { area = "" })">Carrito</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav ms-3">
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-white" href="@Url.Action("Index", "Account")">Perfil</a>
+                                <a class="nav-link text-white" href="/Account/Profile">Perfil</a>
                             </li>
                             <li class="nav-item">
                                 <form method="post" action="/api/Auth/logout" class="d-inline">
@@ -49,6 +44,7 @@
                             </li>
                         }
                     </ul>
+
                 </div>
             </div>
         </nav>
