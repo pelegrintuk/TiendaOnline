@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TiendaOnline.DAL.Migrations.Tienda
+namespace TiendaOnline.DAL.Migrations.TiendaContext
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

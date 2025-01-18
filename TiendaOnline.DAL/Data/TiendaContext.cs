@@ -7,13 +7,13 @@ namespace TiendaOnline.DAL
     {
         public TiendaContext(DbContextOptions<TiendaContext> options) : base(options) { }
 
-        // DbSet para cada entidad a persistir
+        // DbSet para cada entidad personalizada
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
-        public DbSet<ProductImage> ProductImages { get; set; }  // Añadido el DbSet de ProductImage
+        public DbSet<ProductImage> ProductImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,10 +54,9 @@ namespace TiendaOnline.DAL
                 .WithOne(pi => pi.Product)
                 .HasForeignKey(pi => pi.ProductId);
 
-            // Configuración adicional de ProductImage
             modelBuilder.Entity<ProductImage>()
                 .Property(pi => pi.ImageUrl)
-                .IsRequired();  // Asegura que ImageUrl no puede ser nulo
+                .IsRequired();
         }
     }
 }

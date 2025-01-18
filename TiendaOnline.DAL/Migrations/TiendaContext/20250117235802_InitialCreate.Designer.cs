@@ -9,10 +9,10 @@ using TiendaOnline.DAL;
 
 #nullable disable
 
-namespace TiendaOnline.DAL.Migrations.Tienda
+namespace TiendaOnline.DAL.Migrations.TiendaContext
 {
     [DbContext(typeof(TiendaContext))]
-    [Migration("20250112192613_InitialCreate")]
+    [Migration("20250117235802_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace TiendaOnline.DAL.Migrations.Tienda
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

@@ -8,11 +8,19 @@
             <!-- Mensajes de éxito y error -->
             @if (TempData["SuccessMessage"] != null)
             {
+<<<<<<< HEAD
                 <div class="alert alert-success">@TempData["SuccessMessage"]</div>
             }
             @if (TempData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+=======
+                    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+>>>>>>> Se reconfigura DAL
             }
 
             <form method="post" action="/Account/Login" class="needs-validation mt-4" novalidate>
@@ -27,10 +35,17 @@
                     <div class="invalid-feedback">Por favor, introduce tu contraseña.</div>
                 </div>
                 <div class="d-grid gap-2">
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+=======
+                    <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+>>>>>>> Se reconfigura DAL
                 </div>
             </form>
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> Se reconfigura DAL

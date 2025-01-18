@@ -1,6 +1,21 @@
+<<<<<<< HEAD
 {
   "profiles": {
     "TiendaOnline.Web": {
+=======
+﻿{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:5008",
+      "sslPort": 7242
+    }
+  },
+  "profiles": {
+    "https": {
+>>>>>>> Se reconfigura DAL
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

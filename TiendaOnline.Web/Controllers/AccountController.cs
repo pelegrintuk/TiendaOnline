@@ -33,9 +33,40 @@ namespace TiendaOnline.Web.Controllers
                 "application/json"
             );
 
+<<<<<<< HEAD
             var response = await client.PostAsync("api/Auth/login", content);
 
             if (response.IsSuccessStatusCode)
+=======
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            if (!ModelState.IsValid) return View(loginDto);
+
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            var content = new StringContent(
+                JsonSerializer.Serialize(loginDto),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            var response = await client.PostAsync("api/Auth/login", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["SuccessMessage"] = "Inicio de sesión exitoso.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Leer el mensaje de error de la API
+            var errorResponse = await response.Content.ReadAsStringAsync();
+            TempData["ErrorMessage"] = !string.IsNullOrEmpty(errorResponse) ? errorResponse : "Error al iniciar sesión.";
+            return View(loginDto);
+        }
+
+
+        public IActionResult Register()
+>>>>>>> Se reconfigura DAL
             {
                 TempData["SuccessMessage"] = "Inicio de sesión exitoso.";
                 return RedirectToAction("Index", "Home");
