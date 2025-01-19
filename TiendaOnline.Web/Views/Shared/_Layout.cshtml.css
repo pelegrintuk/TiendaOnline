@@ -8,9 +8,9 @@
     color: white; /* Color de los enlaces */
 }
 
-    .navbar-nav .nav-item .nav-link:hover {
-        color: #1b6ec2; /* Color al pasar el ratón */
-    }
+.navbar-nav .nav-item .nav-link:hover {
+    color: #1b6ec2; /* Color al pasar el ratón */
+}
 
 .navbar-toggler {
     border-color: #0077cc;
@@ -27,10 +27,10 @@
     border-color: #1861ac;
 }
 
-    .btn-primary:hover {
-        background-color: #1861ac;
-        border-color: #1b6ec2;
-    }
+.btn-primary:hover {
+    background-color: #1861ac;
+    border-color: #1b6ec2;
+}
 
 /* Pie de página */
 .footer {
@@ -40,13 +40,13 @@
     text-align: center;
 }
 
-    .footer a {
-        color: #0077cc;
-    }
+.footer a {
+    color: #0077cc;
+}
 
-        .footer a:hover {
-            color: #0056b3;
-        }
+.footer a:hover {
+    color: #0056b3;
+}
 
 /* Enlaces en la barra de navegación */
 .navbar-brand {
@@ -69,9 +69,9 @@ h3 {
     text-decoration: none;
 }
 
-    .list-group-item a:hover {
-        text-decoration: underline;
-    }
+.list-group-item a:hover {
+    text-decoration: underline;
+}
 
 a {
     color: #0077cc;
@@ -84,9 +84,9 @@ input.form-control {
     padding: 0.75rem;
 }
 
-    input.form-control:focus {
-        border-color: #1b6ec2;
-    }
+input.form-control:focus {
+    border-color: #1b6ec2;
+}
 
 /* Efectos generales */
 .box-shadow {
@@ -115,4 +115,22 @@ footer {
     background-color: #f8f9fa;
     text-align: center;
     padding: 1rem;
+}
+
+/* Centrar contenido en la página de inicio */
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.center-content h1, .center-content h3, .center-content p {
+    margin-bottom: 1rem;
+}
+
+.center-content .btn {
+    margin-top: 1rem;
 }

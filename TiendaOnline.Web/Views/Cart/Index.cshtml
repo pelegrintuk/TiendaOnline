@@ -1,4 +1,6 @@
-﻿@{
+﻿@model TiendaOnline.Application.DTOs.CartDto
+
+@{
     ViewData["Title"] = "Carrito de Compras";
 }
 
@@ -13,8 +15,40 @@
 else
 {
     <div id="cart-container">
-        <!-- Aquí se renderizarán los items del carrito -->
-        <p>Cargando carrito...</p>
+        @if (Model.Items == null || !Model.Items.Any())
+        {
+            <p>El carrito está vacío.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Total</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <td>@item.ProductName</td>
+                            <td>@item.Price.ToString("C")</td>
+                            <td>@item.Quantity</td>
+                            <td>@(item.Price * item.Quantity).ToString("C")</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="removeFromCart(@item.ProductId)">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p><strong>Total: @Model.Total.ToString("C")</strong></p>
+            <a href="/Orders/Checkout" class="btn btn-success">Proceder al Pago</a>
+        }
     </div>
 
     <script>
@@ -42,32 +76,32 @@ else
             }
 
             let html = `
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Precio</th>
-                                    <th>Cantidad</th>
-                                    <th>Total</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
             cart.items.forEach(item => {
                 html += `
-                            <tr>
-                                <td>${item.productName}</td>
-                                <td>${item.price.toFixed(2)} €</td>
-                                <td>${item.quantity}</td>
-                                <td>${(item.price * item.quantity).toFixed(2)} €</td>
-                                <td>
-                                    <button class="btn btn-danger" onclick="removeFromCart(${item.productId})">Eliminar</button>
-                                </td>
-                            </tr>`;
+                    <tr>
+                        <td>${item.productName}</td>
+                        <td>${item.price.toFixed(2)} €</td>
+                        <td>${item.quantity}</td>
+                        <td>${(item.price * item.quantity).toFixed(2)} €</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="removeFromCart(${item.productId})">Eliminar</button>
+                        </td>
+                    </tr>`;
             });
             html += `</tbody></table>
-                        <p><strong>Total: ${cart.totalPrice.toFixed(2)} €</strong></p>
-                        <a href="/Orders/Checkout" class="btn btn-success">Proceder al Pago</a>`;
+                <p><strong>Total: ${cart.totalPrice.toFixed(2)} €</strong></p>
+                <a href="/Orders/Checkout" class="btn btn-success">Proceder al Pago</a>`;
             document.getElementById('cart-container').innerHTML = html;
         }
 

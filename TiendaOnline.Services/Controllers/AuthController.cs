@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TiendaOnline.Core.Entities;
-using TiendaOnline.Core.ValueObjects;
 using TiendaOnline.Services.DTOs;
 using TiendaOnline.Application.DTOs;
 
@@ -59,14 +58,34 @@ namespace TiendaOnline.Services.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok("Usuario registrado exitosamente");
+            return Ok(new { message = "Usuario registrado exitosamente" });
         }
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok("Cierre de sesión exitoso");
+            return Ok(new { message = "Cierre de sesión exitoso" });
+        }
+
+        [HttpGet("currentuser")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Name = user.UserName,
+                Email = user.Email,
+                // Mapear otros campos necesarios
+            };
+
+            return Ok(userDto);
         }
     }
 }

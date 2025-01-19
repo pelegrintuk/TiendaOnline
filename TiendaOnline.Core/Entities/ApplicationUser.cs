@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using TiendaOnline.Core.ValueObjects;
+
 
 namespace TiendaOnline.Core.Entities
 {
     public class ApplicationUser : IdentityUser
     {
-        public Address Address { get; private set; }
+        public Address Address { get; set; }
 
         public void UpdateAddress(string street, string city, string state, string zipCode, string country)
         {

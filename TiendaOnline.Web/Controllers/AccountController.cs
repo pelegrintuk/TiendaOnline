@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TiendaOnline.Application.DTOs;
+using TiendaOnline.Core.Entities;
 using TiendaOnline.Services.DTOs;
 
 namespace TiendaOnline.Web.Controllers
@@ -10,10 +14,33 @@ namespace TiendaOnline.Web.Controllers
     public class AccountController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(IHttpClientFactory httpClientFactory)
+        public AccountController(IHttpClientFactory httpClientFactory, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
             _httpClientFactory = httpClientFactory;
+            _signInManager = signInManager;
+            _userManager = userManager;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var client = _httpClientFactory.CreateClient("ApiClient");
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await client.GetFromJsonAsync<UserDto>($"api/Users/{userId}");
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
         }
 
         public IActionResult Login()
@@ -33,29 +60,16 @@ namespace TiendaOnline.Web.Controllers
                 "application/json"
             );
 
-<<<<<<< HEAD
-            var response = await client.PostAsync("api/Auth/login", content);
-
-            if (response.IsSuccessStatusCode)
-=======
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginDto loginDto)
-        {
-            if (!ModelState.IsValid) return View(loginDto);
-
-            var client = _httpClientFactory.CreateClient("ApiClient");
-            var content = new StringContent(
-                JsonSerializer.Serialize(loginDto),
-                Encoding.UTF8,
-                "application/json"
-            );
-
             var response = await client.PostAsync("api/Auth/login", content);
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "Inicio de sesión exitoso.";
-                return RedirectToAction("Index", "Home");
+                var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, isPersistent: false, lockoutOnFailure: false);
+                if (result.Succeeded)
+                {
+                    TempData["SuccessMessage"] = "Inicio de sesión exitoso.";
+                    return RedirectToAction("Index", "Home");
+                }
             }
 
             // Leer el mensaje de error de la API
@@ -63,21 +77,6 @@ namespace TiendaOnline.Web.Controllers
             TempData["ErrorMessage"] = !string.IsNullOrEmpty(errorResponse) ? errorResponse : "Error al iniciar sesión.";
             return View(loginDto);
         }
-
-
-        public IActionResult Register()
->>>>>>> Se reconfigura DAL
-            {
-                TempData["SuccessMessage"] = "Inicio de sesión exitoso.";
-                return RedirectToAction("Index", "Home");
-            }
-
-            // Leer el mensaje de error de la API
-            var errorResponse = await response.Content.ReadAsStringAsync();
-            TempData["ErrorMessage"] = !string.IsNullOrEmpty(errorResponse) ? errorResponse : "Error al iniciar sesión.";
-            return View(loginDto);
-        }
-
 
         public IActionResult Register()
         {
@@ -110,6 +109,7 @@ namespace TiendaOnline.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
+            await _signInManager.SignOutAsync();
             var client = _httpClientFactory.CreateClient("ApiClient");
             var response = await client.PostAsync("api/Auth/logout", null);
 

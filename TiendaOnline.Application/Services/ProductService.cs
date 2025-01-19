@@ -7,15 +7,16 @@ using TiendaOnline.Application.Interfaces;
 using TiendaOnline.Application.DTOs;
 using TiendaOnline.Core.Entities;
 using TiendaOnline.DAL;
+using TiendaOnline.DAL.Data;
 
 namespace TiendaOnline.Application.Services
 {
     public class ProductService : IProductService
     {
-        private readonly TiendaContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public ProductService(TiendaContext context, IMapper mapper)
+        public ProductService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TiendaOnline.DAL;
+using TiendaOnline.DAL.Data;
 
 #nullable disable
 
 namespace TiendaOnline.DAL.Migrations
 {
-    [DbContext(typeof(TiendaContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250108191322_UpdateAddressAsValueObject")]
     partial class UpdateAddressAsValueObject
     {

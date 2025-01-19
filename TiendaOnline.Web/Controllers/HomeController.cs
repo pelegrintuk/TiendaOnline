@@ -1,32 +1,53 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using TiendaOnline.Application.DTOs;
 using TiendaOnline.Application.Interfaces;
+using TiendaOnline.Web.Models;
 
 namespace TiendaOnline.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly HttpClient _httpClient;
 
-        public HomeController(IProductService productService)
+        public HomeController(IHttpClientFactory httpClientFactory)
         {
-            _productService = productService;
+            _httpClient = httpClientFactory.CreateClient("ApiClient");
         }
 
         public async Task<IActionResult> Index()
         {
-            // Obtener productos destacados
-            var featuredProducts = await _productService.GetFeaturedProductsAsync();
+            try
+            {
+                var featuredProducts = await _httpClient.GetFromJsonAsync<IEnumerable<ProductDto>>("api/products/featured");
+                var allProducts = await _httpClient.GetFromJsonAsync<IEnumerable<ProductDto>>("api/products");
+                var categories = allProducts
+                    .Select(p => p.Category)
+                    .Distinct()
+                    .Where(c => !string.IsNullOrEmpty(c))
+                    .ToList();
 
-            // Obtener categorías únicas desde los productos
-            var allProducts = await _productService.GetAllProductsAsync();
-            var categories = allProducts
-                .Select(p => p.Category)
-                .Distinct()
-                .Where(c => !string.IsNullOrEmpty(c))
-                .ToList();
+                ViewBag.Categories = categories;
+                return View(featuredProducts);
+            }
+            catch (HttpRequestException ex)
+            {
+                // Registrar el error y mostrar un mensaje de error amigable
+                var logger = HttpContext.RequestServices.GetRequiredService<ILogger<HomeController>>();
+                logger.LogError(ex, "Error al realizar la solicitud HTTP a la API");
 
-            ViewBag.Categories = categories; // Pasar categorías a la vista
-            return View(featuredProducts);
+                return View("Error", new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
+        }
+
+        public IActionResult About()
+        {
+            return View();
+        }
+
+        public IActionResult Contact()
+        {
+            return View();
         }
     }
 }

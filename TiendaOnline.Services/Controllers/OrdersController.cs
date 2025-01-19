@@ -11,58 +11,32 @@ namespace TiendaOnline.Services.Controllers
     public class OrdersController : Controller
     {
         private readonly IOrderService _orderService;
-        private readonly IMapper _mapper;
 
-        public OrdersController(IOrderService orderService, IMapper mapper)
+        public OrdersController(IOrderService orderService)
         {
             _orderService = orderService;
-            _mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllOrders()
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> CreateOrder(string userId, [FromBody] List<OrderProductDto> orderProducts)
         {
-            var orders = await _orderService.GetAllOrdersAsync();
-            return Ok(orders);
+            var order = await _orderService.CreateOrderAsync(userId, orderProducts);
+            return Ok(order);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderById(int id)
+        [HttpGet("{orderId}")]
+        public async Task<IActionResult> GetOrderById(int orderId)
         {
-            var order = await _orderService.GetOrderByIdAsync(id);
+            var order = await _orderService.GetOrderByIdAsync(orderId);
             if (order == null) return NotFound();
             return Ok(order);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderDto orderDto)
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetOrdersByUserId(string userId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            // No es necesario mapear aquí si ya se pasa un OrderDto
-            await _orderService.CreateOrderAsync(orderDto);
-
-            return CreatedAtAction(nameof(GetOrderById), new { id = orderDto.Id }, orderDto);
-        }
-
-
-        [HttpPut("{orderId}")]
-        public async Task<IActionResult> UpdateOrder(int orderId, [FromBody] OrderDto orderDto)
-        {
-            if (orderId != orderDto.Id) return BadRequest();
-
-            // Actualizar directamente con el DTO sin mapear a Order
-            await _orderService.UpdateOrderAsync(orderDto);
-
-            return NoContent();
-        }
-
-
-        [HttpDelete("{orderId}")]
-        public async Task<IActionResult> DeleteOrder(int orderId)
-        {
-            await _orderService.DeleteOrderAsync(orderId);
-            return NoContent();
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+            return Ok(orders);
         }
     }
 }

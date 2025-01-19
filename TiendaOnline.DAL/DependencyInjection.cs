@@ -9,14 +9,7 @@ namespace TiendaOnline.DAL
     {
         public static IServiceCollection AddDAL(this IServiceCollection services, IConfiguration configuration)
         {
-            // Registrar el contexto de datos principal (TiendaContext)
-            services.AddDbContext<TiendaContext>(options =>
-                options.UseSqlServer(
-                    configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("TiendaOnline.DAL")
-                ));
-
-            // Registrar el contexto de datos de autenticación (ApplicationDbContext)
+            // Registrar el contexto de datos unificado (ApplicationDbContext)
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection"),

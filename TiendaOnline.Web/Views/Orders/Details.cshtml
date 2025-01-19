@@ -4,7 +4,7 @@
     ViewData["Title"] = "Detalles del Pedido";
 }
 
-<h1>Detalles del Pedido #@Model.Id</h1>
+<h1>Detalles del Pedido #@Model.OrderId</h1>
 <p><strong>Fecha:</strong> @Model.Date.ToShortDateString()</p>
 <p><strong>Estado:</strong> @Model.Status</p>
 <h3>Artículos</h3>
@@ -17,11 +17,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Items)
+        @foreach (var item in Model.OrderProducts)
         {
             <tr>
                 <td>@item.ProductName</td>
-                <td>@item.ProductPrice.ToString("C")</td>
+                <td>@item.Price.ToString("C")</td>
                 <td>@item.Quantity</td>
             </tr>
         }

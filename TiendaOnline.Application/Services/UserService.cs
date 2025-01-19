@@ -19,12 +19,18 @@ namespace TiendaOnline.Application.Services
             _userManager = userManager;
             _mapper = mapper;
         }
-
         public async Task<bool> CreateUserAsync(UserDto userDto)
         {
-            var user = _mapper.Map<ApplicationUser>(userDto);
+            var user = new ApplicationUser
+            {
+                UserName = userDto.Name,
+                Email = userDto.Email,
+                Address = new Address(userDto.Address.Street, userDto.Address.City, userDto.Address.State, userDto.Address.ZipCode, userDto.Address.Country)
+            };
+
             var result = await _userManager.CreateAsync(user, userDto.Password);
             return result.Succeeded;
+
         }
 
         public async Task<UserDto> GetUserByIdAsync(string userId)
@@ -46,6 +52,7 @@ namespace TiendaOnline.Application.Services
             {
                 user.UserName = userDto.Name;
                 user.Email = userDto.Email;
+                user.UpdateAddress(userDto.Address.Street, userDto.Address.City, userDto.Address.State, userDto.Address.ZipCode, userDto.Address.Country);
                 await _userManager.UpdateAsync(user);
             }
         }

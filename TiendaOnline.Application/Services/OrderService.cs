@@ -8,74 +8,83 @@ using TiendaOnline.Application.DTOs;
 using TiendaOnline.Core.Entities;
 using TiendaOnline.Core.Enums;
 using TiendaOnline.DAL;
+using TiendaOnline.DAL.Data;
 
 namespace TiendaOnline.Application.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly TiendaContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public OrderService(TiendaContext context, IMapper mapper)
+        public OrderService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<OrderDto>> GetAllOrdersAsync()
+        public async Task<OrderDto> CreateOrderAsync(string userId, List<OrderProductDto> orderProducts)
         {
-            var orders = await _context.Orders.Include(o => o.OrderProducts).ToListAsync();
-            return _mapper.Map<IEnumerable<OrderDto>>(orders);
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("Usuario no encontrado.");
+            }
+
+            var order = new Order
+            {
+                UserId = userId,
+                User = user, // Establecer el usuario
+                Date = DateTime.UtcNow,
+                Status = OrderStatus.InProcess,
+                OrderProducts = new List<OrderProduct>()
+            };
+
+            foreach (var orderProduct in orderProducts)
+            {
+                var product = await _context.Products.FindAsync(orderProduct.ProductId);
+                if (product == null || product.Stock < orderProduct.Quantity)
+                {
+                    throw new Exception("Producto no disponible o sin stock suficiente.");
+                }
+
+                product.Stock -= orderProduct.Quantity;
+
+                order.OrderProducts.Add(new OrderProduct
+                {
+                    ProductId = orderProduct.ProductId,
+                    Quantity = orderProduct.Quantity,
+                    Price = product.Price
+                });
+            }
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            return _mapper.Map<OrderDto>(order);
         }
 
         public async Task<OrderDto> GetOrderByIdAsync(int orderId)
         {
-            var order = await _context.Orders.FindAsync(orderId);
+            var order = await _context.Orders
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            if (order == null) return null;
+
             return _mapper.Map<OrderDto>(order);
-        }
-
-        public async Task CreateOrderAsync(OrderDto orderDto)
-        {
-            var order = _mapper.Map<Order>(orderDto);
-            await _context.Orders.AddAsync(order);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateOrderAsync(OrderDto orderDto)
-        {
-            var order = _mapper.Map<Order>(orderDto);
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteOrderAsync(int orderId)
-        {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
         }
 
         public async Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(string userId)
         {
             var orders = await _context.Orders
-                .Where(o => o.UserId == userId)
                 .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .Where(o => o.UserId == userId)
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<OrderDto>>(orders);
-        }
-
-        public async Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status)
-        {
-            var order = await _context.Orders.FindAsync(orderId);
-            if (order == null) return false;
-
-            order.Status = status;
-            await _context.SaveChangesAsync();
-            return true;
         }
     }
 }

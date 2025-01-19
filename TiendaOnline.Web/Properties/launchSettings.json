@@ -1,27 +1,20 @@
-<<<<<<< HEAD
 {
   "profiles": {
-    "TiendaOnline.Web": {
-=======
-﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:5008",
-      "sslPort": 7242
-    }
-  },
-  "profiles": {
-    "https": {
->>>>>>> Se reconfigura DAL
-      "commandName": "Project",
+    "IIS Express": {
+      "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:56443;http://localhost:56444"
+      }
+    },
+    "TiendaOnline.Web": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7242;http://localhost:5242",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

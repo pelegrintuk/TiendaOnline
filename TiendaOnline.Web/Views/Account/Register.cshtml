@@ -8,76 +8,21 @@
             <!-- Mensajes de éxito y error -->
             @if (TempData["SuccessMessage"] != null)
             {
-<<<<<<< HEAD
                 <div class="alert alert-success">@TempData["SuccessMessage"]</div>
             }
             @if (TempData["ErrorMessage"] != null)
             {
                 <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
-=======
-                    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
->>>>>>> Se reconfigura DAL
             }
             @if (!ViewData.ModelState.IsValid)
             {
                 @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                 {
-<<<<<<< HEAD
                     <div class="alert alert-danger">@error.ErrorMessage</div>
-=======
-                            <div class="alert alert-danger">@error.ErrorMessage</div>
->>>>>>> Se reconfigura DAL
                 }
             }
 
             <!-- Formulario -->
-<<<<<<< HEAD
-            <form method="post" action="/Account/Register" class="needs-validation" novalidate>
-                <div class="mb-3">
-                    <label for="username" class="form-label">Usuario:</label>
-                    <input type="text" id="username" name="Username" class="form-control" value="@Model?.Username" required />
-                    <div class="invalid-feedback">Por favor, introduce un nombre de usuario.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Correo electrónico:</label>
-                    <input type="email" id="email" name="Email" class="form-control" value="@Model?.Email" required />
-                    <div class="invalid-feedback">Por favor, introduce un correo electrónico válido.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña:</label>
-                    <input type="password" id="password" name="Password" class="form-control" required />
-                    <div class="invalid-feedback">Por favor, introduce una contraseña.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="street" class="form-label">Calle:</label>
-                    <input type="text" id="street" name="Street" class="form-control" value="@Model?.Street" required />
-                    <div class="invalid-feedback">Por favor, introduce una calle válida.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="city" class="form-label">Ciudad:</label>
-                    <input type="text" id="city" name="City" class="form-control" value="@Model?.City" required />
-                    <div class="invalid-feedback">Por favor, introduce una ciudad válida.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="state" class="form-label">Estado:</label>
-                    <input type="text" id="state" name="State" class="form-control" value="@Model?.State" required />
-                    <div class="invalid-feedback">Por favor, introduce un estado válido.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="zipCode" class="form-label">Código postal:</label>
-                    <input type="text" id="zipCode" name="ZipCode" class="form-control" value="@Model?.ZipCode" required />
-                    <div class="invalid-feedback">Por favor, introduce un código postal válido.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="country" class="form-label">País:</label>
-                    <input type="text" id="country" name="Country" class="form-control" value="@Model?.Country" required />
-                    <div class="invalid-feedback">Por favor, introduce un país válido.</div>
-                </div>
-=======
             <form method="post" action="/Account/Register" class="needs-validation mt-4" novalidate>
                 <!-- Usuario -->
                 <div class="mb-3">
@@ -134,7 +79,6 @@
                 </div>
 
                 <!-- Botón de registro -->
->>>>>>> Se reconfigura DAL
                 <button type="submit" class="btn btn-primary w-100">Registrarse</button>
             </form>
         </div>

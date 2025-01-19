@@ -7,7 +7,7 @@ namespace TiendaOnline.Application.Interfaces
     {
         Task<CartDto> GetCartByUserIdAsync(string userId);
         Task AddToCartAsync(string userId, CartItemDto cartItemDto);
-        Task RemoveFromCartAsync(string userId, int productId);
+        Task RemoveFromCartAsync(string userId, int itemId);
         Task ClearCartAsync(string userId);
     }
 }

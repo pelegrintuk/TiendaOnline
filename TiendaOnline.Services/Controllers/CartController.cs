@@ -6,7 +6,7 @@ namespace TiendaOnline.Services.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CartController : Controller
+    public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
 
@@ -34,6 +34,13 @@ namespace TiendaOnline.Services.Controllers
         public async Task<IActionResult> RemoveFromCart(string userId, int itemId)
         {
             await _cartService.RemoveFromCartAsync(userId, itemId);
+            return NoContent();
+        }
+
+        [HttpDelete("{userId}/clear")]
+        public async Task<IActionResult> ClearCart(string userId)
+        {
+            await _cartService.ClearCartAsync(userId);
             return NoContent();
         }
     }

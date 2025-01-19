@@ -3,8 +3,10 @@
 public class CartDto
 {
     public string UserId { get; set; }
-    public List<CartItemDto> Items { get; set; }
-    public decimal TotalPrice => Items?.Sum(item => item.Price * item.Quantity) ?? 0;
+    public List<CartItemDto> Items { get; set; } = new List<CartItemDto>();
+
+    // Propiedad calculada para el total del carrito
+    public decimal Total => Items.Sum(item => item.Price * item.Quantity);
 }
 
 public class CartItemDto

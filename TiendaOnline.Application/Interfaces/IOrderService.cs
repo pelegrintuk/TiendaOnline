@@ -7,12 +7,8 @@ namespace TiendaOnline.Application.Interfaces
 {
     public interface IOrderService
     {
-        Task<IEnumerable<OrderDto>> GetAllOrdersAsync();
+        Task<OrderDto> CreateOrderAsync(string userId, List<OrderProductDto> orderProducts);
         Task<OrderDto> GetOrderByIdAsync(int orderId);
-        Task CreateOrderAsync(OrderDto orderDto);
-        Task UpdateOrderAsync(OrderDto orderDto);
-        Task DeleteOrderAsync(int orderId);
         Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(string userId);
-        Task<bool> UpdateOrderStatusAsync(int orderId, OrderStatus status);
     }
 }

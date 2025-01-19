@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TiendaOnline.Core.ValueObjects
+namespace TiendaOnline.Core.Entities
 {
     public class Address
     {
@@ -58,4 +58,3 @@ namespace TiendaOnline.Core.ValueObjects
         }
     }
 }
-

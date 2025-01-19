@@ -3,62 +3,65 @@
     ViewData["Title"] = "Inicio";
 }
 
-<!-- Carrusel de productos destacados -->
-<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @if (Model != null && Model.Any())
-        {
-            var first = true;
-            foreach (var product in Model)
+<div class="center-content">
+    <!-- Carrusel de productos destacados -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            @if (Model != null && Model.Any())
             {
-                <div class="carousel-item @(first ? "active" : "")">
-                    <img src="~/images/@product.Images.FirstOrDefault()" class="d-block w-100" alt="@product.Name">
-                    <div class="carousel-caption d-none d-md-block">
-                        <h5>@product.Name</h5>
-                        <p>@product.Description</p>
+                var first = true;
+                foreach (var product in Model)
+                {
+                    var imageUrl = product.Images?.FirstOrDefault() ?? "default-image.jpg"; // Usar una imagen por defecto si no hay imágenes
+                    <div class="carousel-item @(first ? "active" : "")">
+                        <img src="~/images/@imageUrl" class="d-block w-100" alt="@product.Name">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>@product.Name</h5>
+                            <p>@product.Description</p>
+                        </div>
                     </div>
+                    first = false;
+                }
+            }
+            else
+            {
+                <div class="carousel-item active">
+                    <p>No hay productos destacados disponibles.</p>
                 </div>
-                first = false;
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+    <!-- Lista de categorías -->
+    <h3 class="mt-4">Categorías</h3>
+    <ul class="list-group">
+        @if (ViewBag.Categories != null && ((IEnumerable<string>)ViewBag.Categories).Any())
+        {
+            foreach (var category in (IEnumerable<string>)ViewBag.Categories)
+            {
+                <li class="list-group-item">
+                    <a href="@Url.Action("GetProductsByCategory", "Products", new { category = category })">@category</a>
+                </li>
             }
         }
         else
         {
-            <div class="carousel-item active">
-                <p>No hay productos destacados disponibles.</p>
-            </div>
+            <li class="list-group-item">No hay categorías disponibles.</li>
         }
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Siguiente</span>
-    </button>
+    </ul>
+
+    <!-- Buscador -->
+    <h3 class="mt-4">Buscar Productos</h3>
+    <form action="@Url.Action("Search", "Products")" method="get">
+        <input type="text" name="query" class="form-control" placeholder="Buscar productos..." />
+        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+    </form>
 </div>
-
-<!-- Lista de categorías -->
-<h3 class="mt-4">Categorías</h3>
-<ul class="list-group">
-    @if (ViewBag.Categories != null)
-    {
-        foreach (var category in ViewBag.Categories)
-        {
-            <li class="list-group-item">
-                <a href="@Url.Action("GetProductsByCategory", "Products", new { category = category.Name })">@category.Name</a>
-            </li>
-        }
-    }
-    else
-    {
-        <li class="list-group-item">No hay categorías disponibles.</li>
-    }
-</ul>
-
-<!-- Buscador -->
-<h3 class="mt-4">Buscar Productos</h3>
-<form action="@Url.Action("Search", "Products")" method="get">
-    <input type="text" name="query" class="form-control" placeholder="Buscar productos..." />
-    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
-</form>

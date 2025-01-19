@@ -5,15 +5,16 @@ using TiendaOnline.Application.DTOs;
 using TiendaOnline.Core.Entities;
 using TiendaOnline.DAL;
 using Microsoft.EntityFrameworkCore;
+using TiendaOnline.DAL.Data;
 
 namespace TiendaOnline.Application.Services
 {
     public class CartService : ICartService
     {
-        private readonly TiendaContext _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public CartService(TiendaContext context, IMapper mapper)
+        public CartService(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -25,60 +26,61 @@ namespace TiendaOnline.Application.Services
                 .Include(c => c.Items)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            return _mapper.Map<CartDto>(cart ?? new Cart { UserId = userId });
+            if (cart == null) return null;
+
+            return _mapper.Map<CartDto>(cart);
         }
 
         public async Task AddToCartAsync(string userId, CartItemDto cartItemDto)
         {
-            var cart = await GetCartByUserIdAsync(userId);
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            var cartEntity = _mapper.Map<Cart>(cart);
-
-            var item = cartEntity.Items.FirstOrDefault(i => i.ProductId == cartItemDto.ProductId);
-            if (item == null)
+            if (cart == null)
             {
-                var product = await _context.Products.FindAsync(cartItemDto.ProductId);
-                if (product != null)
-                {
-                    cartEntity.Items.Add(new CartItem
-                    {
-                        ProductId = cartItemDto.ProductId,
-                        ProductName = product.Name,
-                        Price = product.Price,
-                        Quantity = cartItemDto.Quantity
-                    });
-                }
+                cart = new Cart { UserId = userId };
+                _context.Carts.Add(cart);
+            }
+
+            var cartItem = cart.Items.FirstOrDefault(item => item.ProductId == cartItemDto.ProductId);
+            if (cartItem == null)
+            {
+                cart.Items.Add(_mapper.Map<CartItem>(cartItemDto));
             }
             else
             {
-                item.Quantity += cartItemDto.Quantity;
+                cartItem.Quantity += cartItemDto.Quantity;
             }
 
-            _context.Carts.Update(cartEntity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveFromCartAsync(string userId, int productId)
+        public async Task RemoveFromCartAsync(string userId, int itemId)
         {
-            var cart = await GetCartByUserIdAsync(userId);
-            var cartEntity = _mapper.Map<Cart>(cart);
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            var item = cartEntity.Items.FirstOrDefault(i => i.ProductId == productId);
-            if (item != null)
+            if (cart == null) return;
+
+            var cartItem = cart.Items.FirstOrDefault(item => item.ProductId == itemId);
+            if (cartItem != null)
             {
-                cartEntity.Items.Remove(item);
-                _context.Carts.Update(cartEntity);
+                cart.Items.Remove(cartItem);
                 await _context.SaveChangesAsync();
             }
         }
 
         public async Task ClearCartAsync(string userId)
         {
-            var cart = await GetCartByUserIdAsync(userId);
-            var cartEntity = _mapper.Map<Cart>(cart);
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
-            cartEntity.Items.Clear();
-            _context.Carts.Update(cartEntity);
+            if (cart == null) return;
+
+            cart.Items.Clear();
             await _context.SaveChangesAsync();
         }
     }

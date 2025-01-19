@@ -6,12 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TiendaOnline.DAL;
+using TiendaOnline.DAL.Data;
 
 #nullable disable
 
 namespace TiendaOnline.Web.Migrations
 {
-    [DbContext(typeof(TiendaContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20250111124117_AddCategoryToProduct")]
     partial class AddCategoryToProduct
     {
