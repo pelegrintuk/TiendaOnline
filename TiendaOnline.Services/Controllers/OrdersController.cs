@@ -8,35 +8,71 @@ namespace TiendaOnline.Services.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class OrdersController : Controller
+    public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly ICartService _cartService;
 
-        public OrdersController(IOrderService orderService)
+        public OrdersController(IOrderService orderService, ICartService cartService)
         {
             _orderService = orderService;
+            _cartService = cartService;
         }
 
-        [HttpPost("{userId}")]
-        public async Task<IActionResult> CreateOrder(string userId, [FromBody] List<OrderProductDto> orderProducts)
+        [HttpPost("ProcessPayment")]
+        public IActionResult ProcessPayment([FromBody] PaymentDto paymentDto)
         {
-            var order = await _orderService.CreateOrderAsync(userId, orderProducts);
-            return Ok(order);
+            if (ValidatePayment(paymentDto))
+            {
+                // Procesar el pago y devolver una respuesta exitosa
+                return Ok();
+            }
+
+            return BadRequest("Datos de pago inválidos.");
         }
 
-        [HttpGet("{orderId}")]
-        public async Task<IActionResult> GetOrderById(int orderId)
+        private bool ValidatePayment(PaymentDto paymentDto)
         {
-            var order = await _orderService.GetOrderByIdAsync(orderId);
-            if (order == null) return NotFound();
-            return Ok(order);
+            // Validar el número de tarjeta (algoritmo de Luhn)
+            if (!IsValidCardNumber(paymentDto.CardNumber))
+            {
+                return false;
+            }
+
+            // Validar la fecha de expiración
+            if (!DateTime.TryParseExact(paymentDto.ExpiryDate, "yyyy-MM", null, System.Globalization.DateTimeStyles.None, out var expiryDate) || expiryDate < DateTime.UtcNow)
+            {
+                return false;
+            }
+
+            // Validar el CVV (debe ser un número de 3 dígitos)
+            if (paymentDto.CVV.Length != 3 || !int.TryParse(paymentDto.CVV, out _))
+            {
+                return false;
+            }
+
+            return true;
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetOrdersByUserId(string userId)
+        private bool IsValidCardNumber(string cardNumber)
         {
-            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
-            return Ok(orders);
+            int sum = 0;
+            bool alternate = false;
+            for (int i = cardNumber.Length - 1; i >= 0; i--)
+            {
+                int n = int.Parse(cardNumber[i].ToString());
+                if (alternate)
+                {
+                    n *= 2;
+                    if (n > 9)
+                    {
+                        n -= 9;
+                    }
+                }
+                sum += n;
+                alternate = !alternate;
+            }
+            return (sum % 10 == 0);
         }
     }
 }

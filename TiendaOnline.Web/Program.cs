@@ -7,6 +7,7 @@ using TiendaOnline.Application.Services;
 using TiendaOnline.DAL;
 using TiendaOnline.DAL.Data;
 using TiendaOnline.Core.Entities;
+using TiendaOnline.Infrastructure.Email;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +37,7 @@ try
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<IOrderService, OrderService>();
     builder.Services.AddScoped<ICartService, CartService>();
+    builder.Services.AddScoped<IEmailService, EmailService>(); // Registro de IEmailService
 
     // Configuración de cookies de autenticación
     builder.Services.ConfigureApplicationCookie(options =>
