@@ -28,6 +28,18 @@ namespace TiendaOnline.Application.Services
             _logger = logger;
         }
 
+        public async Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(string userId)
+        {
+            _logger.LogInformation("Fetching orders for user: {UserId}", userId);
+            var orders = await _context.Orders
+                .Include(o => o.OrderProducts)
+                .ThenInclude(op => op.Product)
+                .Where(o => o.UserId == userId)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<OrderDto>>(orders);
+        }
+
         public async Task<OrderDto> CreateOrderAsync(string userId, List<OrderProductDto> orderProducts)
         {
             _logger.LogInformation("Creating order for user: {UserId}", userId);
@@ -96,18 +108,6 @@ namespace TiendaOnline.Application.Services
             }
 
             return _mapper.Map<OrderDto>(order);
-        }
-
-        public async Task<IEnumerable<OrderDto>> GetOrdersByUserIdAsync(string userId)
-        {
-            _logger.LogInformation("Fetching orders for user: {UserId}", userId);
-            var orders = await _context.Orders
-                .Include(o => o.OrderProducts)
-                .ThenInclude(op => op.Product)
-                .Where(o => o.UserId == userId)
-                .ToListAsync();
-
-            return _mapper.Map<IEnumerable<OrderDto>>(orders);
         }
     }
 }

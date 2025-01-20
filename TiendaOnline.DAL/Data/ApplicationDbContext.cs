@@ -59,12 +59,18 @@ namespace TiendaOnline.DAL.Data
             // Relación de Cart y CartItems
             builder.Entity<Cart>()
                 .HasMany(c => c.Items)
-                .WithOne()
-                .HasForeignKey(ci => ci.Id);
+                .WithOne(ci => ci.Cart)
+                .HasForeignKey(ci => ci.CartId);
 
             builder.Entity<CartItem>()
                 .Property(ci => ci.Price)
                 .HasColumnType("decimal(18,2)");
+
+            // Relación de CartItem y Product
+            builder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany()
+                .HasForeignKey(ci => ci.ProductId);
 
             // Configuración de Product
             builder.Entity<Product>()

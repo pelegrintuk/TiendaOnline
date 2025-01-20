@@ -28,7 +28,7 @@ namespace TiendaOnline.Application.Mapping
             // Mapeo entre Product y ProductDto
             CreateMap<Product, ProductDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.ProductId))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl).ToList()));
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images.Select(i => new ProductImageDto { Id = i.Id, ImageUrl = i.ImageUrl }).ToList()));
 
             CreateMap<ProductDto, Product>()
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Id))
@@ -36,7 +36,8 @@ namespace TiendaOnline.Application.Mapping
 
             // Mapeo entre Cart y CartDto
             CreateMap<Cart, CartDto>()
-                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items));
+                .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
+                .ForMember(dest => dest.Total, opt => opt.Ignore());
 
             // Mapeo entre CartItem y CartItemDto
             CreateMap<CartItem, CartItemDto>();

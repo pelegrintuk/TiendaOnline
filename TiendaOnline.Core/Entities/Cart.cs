@@ -22,6 +22,13 @@ namespace TiendaOnline.Core.Entities
         public string ProductName { get; set; } // Nombre del producto
         public decimal Price { get; set; } // Precio del producto
         public int Quantity { get; set; } // Cantidad
+
+        // Relación con Product
+        public Product Product { get; set; }
+
+        // Relación con Cart
+        public int CartId { get; set; }
+        public Cart Cart { get; set; }
     }
 }
 

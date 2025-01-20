@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TiendaOnline.Application.DTOs;
+using TiendaOnline.Application.Interfaces;
 using TiendaOnline.Core.Entities;
 using TiendaOnline.Services.DTOs;
 
@@ -16,15 +17,17 @@ namespace TiendaOnline.Web.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOrderService _orderService;
 
-        public AccountController(IHttpClientFactory httpClientFactory, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
+        public AccountController(IHttpClientFactory httpClientFactory, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IOrderService orderService)
         {
             _httpClientFactory = httpClientFactory;
             _signInManager = signInManager;
             _userManager = userManager;
+            _orderService = orderService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Profile()
         {
             if (!User.Identity.IsAuthenticated)
             {
@@ -40,7 +43,16 @@ namespace TiendaOnline.Web.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            var orders = await _orderService.GetOrdersByUserIdAsync(userId);
+            var userProfile = new UserProfileDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Address = user.Address,
+                Orders = orders
+            };
+
+            return View(userProfile);
         }
 
         public IActionResult Login()
@@ -98,11 +110,29 @@ namespace TiendaOnline.Web.Controllers
 
             if (response.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "Registro exitoso. Ahora puedes iniciar sesión.";
-                return RedirectToAction("Login");
+                var user = new ApplicationUser
+                {
+                    UserName = registerDto.Username,
+                    Email = registerDto.Email,
+                    Address = new Address(registerDto.Street, registerDto.City, registerDto.State, registerDto.ZipCode, registerDto.Country)
+                };
+
+                var result = await _userManager.CreateAsync(user, registerDto.Password);
+                if (result.Succeeded)
+                {
+                    TempData["SuccessMessage"] = "Registro exitoso. Ahora puedes iniciar sesión.";
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = string.Join(", ", result.Errors.Select(e => e.Description));
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Error al registrar el usuario.";
             }
 
-            TempData["ErrorMessage"] = "Error al registrar el usuario.";
             return View(registerDto);
         }
 

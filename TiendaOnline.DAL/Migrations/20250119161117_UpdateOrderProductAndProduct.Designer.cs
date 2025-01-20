@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TiendaOnline.DAL.Data;
 
@@ -11,9 +12,11 @@ using TiendaOnline.DAL.Data;
 namespace TiendaOnline.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250119161117_UpdateOrderProductAndProduct")]
+    partial class UpdateOrderProductAndProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,12 +243,6 @@ namespace TiendaOnline.DAL.Migrations
             modelBuilder.Entity("TiendaOnline.Core.Entities.CartItem", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
@@ -262,10 +259,6 @@ namespace TiendaOnline.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("CartItems");
                 });
@@ -475,21 +468,11 @@ namespace TiendaOnline.DAL.Migrations
 
             modelBuilder.Entity("TiendaOnline.Core.Entities.CartItem", b =>
                 {
-                    b.HasOne("TiendaOnline.Core.Entities.Cart", "Cart")
+                    b.HasOne("TiendaOnline.Core.Entities.Cart", null)
                         .WithMany("Items")
-                        .HasForeignKey("CartId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("TiendaOnline.Core.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("TiendaOnline.Core.Entities.Order", b =>

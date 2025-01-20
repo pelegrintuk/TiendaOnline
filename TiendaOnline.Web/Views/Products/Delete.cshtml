@@ -1,0 +1,45 @@
+﻿@model TiendaOnline.Application.DTOs.ProductDto
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<h1>Eliminar Producto</h1>
+
+<h4>Producto</h4>
+<hr />
+<div>
+    <h4>¿Estás seguro de que deseas eliminar este producto?</h4>
+    <dl class="row">
+        <dt class="col-sm-2">
+            Nombre
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Name
+        </dd>
+        <dt class="col-sm-2">
+            Descripción
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Description
+        </dd>
+        <dt class="col-sm-2">
+            Precio
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Price.ToString("C")
+        </dd>
+        <dt class="col-sm-2">
+            Categoría
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Category
+        </dd>
+    </dl>
+    
+    <form asp-action="DeleteConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Eliminar" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>

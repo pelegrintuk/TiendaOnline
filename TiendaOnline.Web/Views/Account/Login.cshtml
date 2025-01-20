@@ -2,34 +2,42 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <h2 class="text-center">Iniciar Sesión</h2>
 
-            <!-- Mensajes de éxito y error -->
-            @if (TempData["SuccessMessage"] != null)
+            <!-- Mensajes de error -->
+            @if (!ViewData.ModelState.IsValid)
             {
-                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-            }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div class="alert alert-danger">@error.ErrorMessage</div>
+                }
             }
 
             <!-- Formulario -->
             <form method="post" action="/Account/Login" class="needs-validation mt-4" novalidate>
+                <!-- Usuario -->
                 <div class="mb-3">
-                    <label for="username" class="form-label">Usuario:</label>
+                    <label for="username" class="form-label">Usuario</label>
                     <input type="text" id="username" name="Username" class="form-control" value="@Model?.Username" required />
-                    <div class="invalid-feedback">Por favor, introduce tu usuario.</div>
+                    <div class="invalid-feedback">Por favor, introduce un nombre de usuario.</div>
                 </div>
+
+                <!-- Contraseña -->
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña:</label>
+                    <label for="password" class="form-label">Contraseña</label>
                     <input type="password" id="password" name="Password" class="form-control" required />
-                    <div class="invalid-feedback">Por favor, introduce tu contraseña.</div>
+                    <div class="invalid-feedback">Por favor, introduce una contraseña.</div>
                 </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+
+                <!-- Recordarme -->
+                <div class="mb-3 form-check">
+                    <input type="checkbox" id="rememberMe" name="RememberMe" class="form-check-input" />
+                    <label for="rememberMe" class="form-check-label">Recordarme</label>
                 </div>
+
+                <!-- Botón de inicio de sesión -->
+                <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
             </form>
         </div>
     </div>

@@ -10,18 +10,21 @@ namespace TiendaOnline.Services.Controllers
     [Route("api/[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly IOrderService _orderService;
-        private readonly ICartService _cartService;
+        private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(IOrderService orderService, ICartService cartService)
+        public OrdersController(ILogger<OrdersController> logger)
         {
-            _orderService = orderService;
-            _cartService = cartService;
+            _logger = logger;
         }
 
         [HttpPost("ProcessPayment")]
         public IActionResult ProcessPayment([FromBody] PaymentDto paymentDto)
         {
+            if (paymentDto == null)
+            {
+                return BadRequest("Invalid payment data.");
+            }
+
             if (ValidatePayment(paymentDto))
             {
                 // Procesar el pago y devolver una respuesta exitosa

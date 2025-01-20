@@ -3,52 +3,54 @@
     ViewData["Title"] = "Inicio";
 }
 
-<div class="center-content">
-    <!-- Carrusel de productos destacados -->
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            @if (Model != null && Model.Any())
+<div class="container mt-4">
+    <!-- Galería de productos destacados -->
+    <h3 class="text-center mb-4">Productos Destacados</h3>
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var product in Model)
             {
-                var first = true;
-                foreach (var product in Model)
-                {
-                    var imageUrl = product.Images?.FirstOrDefault() ?? "default-image.jpg"; // Usar una imagen por defecto si no hay imágenes
-                    <div class="carousel-item @(first ? "active" : "")">
-                        <img src="~/images/@imageUrl" class="d-block w-100" alt="@product.Name">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>@product.Name</h5>
-                            <p>@product.Description</p>
+                var imageUrl = product.Images?.FirstOrDefault()?.ImageUrl;
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrEmpty(imageUrl))
+                        {
+                            <img src="@imageUrl" class="card-img-top" alt="@product.Name" style="max-height: 200px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="card-img-top" style="max-height: 200px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                                <span class="text-muted">Imagen no disponible</span>
+                            </div>
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text text-truncate">@product.Description</p>
+                            <p class="card-text"><strong>@product.Price.ToString("C")</strong></p>
+                            <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="btn btn-primary">Ver Detalles</a>
                         </div>
                     </div>
-                    first = false;
-                }
-            }
-            else
-            {
-                <div class="carousel-item active">
-                    <p>No hay productos destacados disponibles.</p>
                 </div>
             }
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Siguiente</span>
-        </button>
+        }
+        else
+        {
+            <div class="col-12">
+                <p class="text-center">No hay productos destacados disponibles.</p>
+            </div>
+        }
     </div>
 
     <!-- Lista de categorías -->
-    <h3 class="mt-4">Categorías</h3>
-    <ul class="list-group">
+    <h3 class="mt-4 text-center">Categorías</h3>
+    <ul class="list-group list-group-horizontal justify-content-center mb-4">
         @if (ViewBag.Categories != null && ((IEnumerable<string>)ViewBag.Categories).Any())
         {
             foreach (var category in (IEnumerable<string>)ViewBag.Categories)
             {
-                <li class="list-group-item">
-                    <a href="@Url.Action("GetProductsByCategory", "Products", new { category = category })">@category</a>
+                <li class="list-group-item bg-light">
+                    <a href="@Url.Action("GetProductsByCategory", "Products", new { category = category })" class="text-primary">@category</a>
                 </li>
             }
         }
@@ -60,8 +62,9 @@
 
     <!-- Buscador -->
     <h3 class="mt-4">Buscar Productos</h3>
-    <form action="@Url.Action("Search", "Products")" method="get">
+    <form action="@Url.Action("Search", "Products")" method="get" class="input-group mb-4">
         <input type="text" name="query" class="form-control" placeholder="Buscar productos..." />
-        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+        <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
+
 </div>

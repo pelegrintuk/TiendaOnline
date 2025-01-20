@@ -1,0 +1,64 @@
+﻿@model TiendaOnline.Application.DTOs.PaymentDto
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="text-center">Checkout</h1>
+
+            <form asp-action="ProcessPayment" method="post" class="needs-validation" novalidate>
+                <div class="form-group mb-3">
+                    <label for="CardNumber">Número de Tarjeta</label>
+                    <input type="text" class="form-control" id="CardNumber" name="CardNumber" required />
+                    <div class="invalid-feedback">
+                        Por favor, ingresa un número de tarjeta válido.
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="ExpiryDate">Fecha de Expiración (YYYY-MM)</label>
+                    <input type="text" class="form-control" id="ExpiryDate" name="ExpiryDate" required />
+                    <div class="invalid-feedback">
+                        Por favor, ingresa una fecha de expiración válida.
+                    </div>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="CVV">CVV</label>
+                    <input type="text" class="form-control" id="CVV" name="CVV" required />
+                    <div class="invalid-feedback">
+                        Por favor, ingresa un CVV válido.
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Pagar</button>
+            </form>
+
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    // Validación de Bootstrap
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>

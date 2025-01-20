@@ -1,4 +1,5 @@
 ﻿@model TiendaOnline.Application.DTOs.CartDto
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Carrito de Compras";
@@ -30,7 +31,7 @@
                         <td>@item.ProductName</td>
                         <td>@item.Price.ToString("C")</td>
                         <td>@item.Quantity</td>
-                        <td>@(item.Price * item.Quantity).ToString("C")</td>
+                        <td>@item.TotalPrice.ToString("C")</td>
                         <td>
                             <button class="btn btn-danger" onclick="removeFromCart(@item.ProductId)">Eliminar</button>
                         </td>
@@ -44,71 +45,20 @@
 </div>
 
 <script>
-    const userId = '@(User.Identity.IsAuthenticated ? User.Identity.Name : Context.Request.Cookies["TempUserId"])'; // Usuario autenticado o temporal
-
-    async function loadCart() {
-        try {
-            const response = await fetch(`/api/Cart/${userId}`);
-            if (response.ok) {
-                const cart = await response.json();
-                renderCart(cart);
-            } else {
-                document.getElementById('cart-container').innerHTML = '<p>El carrito está vacío.</p>';
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            document.getElementById('cart-container').innerHTML = '<p>Error al cargar el carrito</p>';
-        }
-    }
-
-    function renderCart(cart) {
-        if (!cart.items || cart.items.length === 0) {
-            document.getElementById('cart-container').innerHTML = '<p>El carrito está vacío.</p>';
-            return;
-        }
-
-        let html = `
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Producto</th>
-                        <th>Precio</th>
-                        <th>Cantidad</th>
-                        <th>Total</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-        cart.items.forEach(item => {
-            html += `
-                <tr>
-                    <td>${item.productName}</td>
-                    <td>${item.price.toFixed(2)} €</td>
-                    <td>${item.quantity}</td>
-                    <td>${(item.price * item.quantity).toFixed(2)} €</td>
-                    <td>
-                        <button class="btn btn-danger" onclick="removeFromCart(${item.productId})">Eliminar</button>
-                    </td>
-                </tr>`;
-        });
-        html += `</tbody></table>
-            <p><strong>Total: ${cart.totalPrice.toFixed(2)} €</strong></p>
-            <a href="/Orders/Checkout" class="btn btn-success">Proceder al Pago</a>`;
-        document.getElementById('cart-container').innerHTML = html;
-    }
+    const userId = '@(User.Identity.IsAuthenticated ? User.FindFirstValue(ClaimTypes.NameIdentifier) : Context.Request.Cookies["TempUserId"])'; // Usuario autenticado o temporal
 
     async function removeFromCart(productId) {
+        console.log(`Intentando eliminar el producto con ID: ${productId} para el usuario: ${userId}`);
         try {
             const response = await fetch(`/api/Cart/${userId}/items/${productId}`, { method: 'DELETE' });
             if (response.ok) {
-                loadCart(); // Recargar carrito
+                console.log('Producto eliminado correctamente');
+                location.reload(); // Recargar la página para actualizar el carrito
             } else {
-                console.error('Error al eliminar el producto');
+                console.error('Error al eliminar el producto:', response.statusText);
             }
         } catch (error) {
             console.error('Error:', error);
         }
     }
-
-    loadCart(); // Cargar el carrito al iniciar
 </script>

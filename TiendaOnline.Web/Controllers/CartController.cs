@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TiendaOnline.Application.DTOs;
-using TiendaOnline.Application.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace TiendaOnline.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class CartController : Controller
     {
         private readonly HttpClient _httpClient;
@@ -19,12 +18,7 @@ namespace TiendaOnline.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = User.Identity.IsAuthenticated ? User.Identity.Name : HttpContext.Request.Cookies["TempUserId"];
-            if (userId == null)
-            {
-                userId = Guid.NewGuid().ToString();
-                HttpContext.Response.Cookies.Append("TempUserId", userId, new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(1) });
-            }
+            var userId = GetUserId();
 
             _logger.LogInformation("Fetching cart for user: {UserId}", userId);
 
@@ -44,12 +38,7 @@ namespace TiendaOnline.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToCart(int productId, int quantity)
         {
-            var userId = User.Identity.IsAuthenticated ? User.Identity.Name : HttpContext.Request.Cookies["TempUserId"];
-            if (userId == null)
-            {
-                userId = Guid.NewGuid().ToString();
-                HttpContext.Response.Cookies.Append("TempUserId", userId, new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(1) });
-            }
+            var userId = GetUserId();
 
             var cartItemDto = new CartItemDto
             {
@@ -64,6 +53,7 @@ namespace TiendaOnline.Web.Controllers
                 var response = await _httpClient.PostAsJsonAsync($"api/Cart/{userId}", cartItemDto);
                 if (response.IsSuccessStatusCode)
                 {
+                    _logger.LogInformation("Product {ProductId} added to cart for user: {UserId}", productId, userId);
                     return RedirectToAction("Index");
                 }
 
@@ -82,7 +72,7 @@ namespace TiendaOnline.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveFromCart(int productId)
         {
-            var userId = User.Identity.IsAuthenticated ? User.Identity.Name : HttpContext.Request.Cookies["TempUserId"];
+            var userId = GetUserId();
 
             _logger.LogInformation("Removing product {ProductId} from cart for user: {UserId}", productId, userId);
 
@@ -91,6 +81,7 @@ namespace TiendaOnline.Web.Controllers
                 var response = await _httpClient.DeleteAsync($"api/Cart/{userId}/items/{productId}");
                 if (response.IsSuccessStatusCode)
                 {
+                    _logger.LogInformation("Product {ProductId} removed from cart for user: {UserId}", productId, userId);
                     return RedirectToAction("Index");
                 }
 
@@ -109,7 +100,7 @@ namespace TiendaOnline.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ClearCart()
         {
-            var userId = User.Identity.IsAuthenticated ? User.Identity.Name : HttpContext.Request.Cookies["TempUserId"];
+            var userId = GetUserId();
 
             _logger.LogInformation("Clearing cart for user: {UserId}", userId);
 
@@ -118,6 +109,7 @@ namespace TiendaOnline.Web.Controllers
                 var response = await _httpClient.DeleteAsync($"api/Cart/{userId}/clear");
                 if (response.IsSuccessStatusCode)
                 {
+                    _logger.LogInformation("Cart cleared for user: {UserId}", userId);
                     return RedirectToAction("Index");
                 }
 
@@ -130,6 +122,24 @@ namespace TiendaOnline.Web.Controllers
                 _logger.LogError(ex, "Error clearing cart for user: {UserId}", userId);
                 TempData["ErrorMessage"] = "Error al vaciar el carrito.";
                 return RedirectToAction("Index");
+            }
+        }
+
+        private string GetUserId()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+            else
+            {
+                var tempUserId = HttpContext.Request.Cookies["TempUserId"];
+                if (tempUserId == null)
+                {
+                    tempUserId = Guid.NewGuid().ToString();
+                    HttpContext.Response.Cookies.Append("TempUserId", tempUserId, new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(1) });
+                }
+                return tempUserId;
             }
         }
     }

@@ -22,6 +22,16 @@ namespace TiendaOnline.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<ProductDto>> GetFeaturedProductsAsync()
+        {
+            var products = await _context.Products
+                .Include(p => p.Images)
+                .Where(p => p.IsFeatured)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<ProductDto>>(products);
+        }
+
         public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(bool isAdmin = false)
         {
             var products = _context.Products
@@ -47,7 +57,7 @@ namespace TiendaOnline.Application.Services
         {
             var products = await _context.Products
                 .Include(p => p.Images)
-                .Where(p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Category.ToLower() == category.ToLower())
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<ProductDto>>(products);
@@ -57,18 +67,8 @@ namespace TiendaOnline.Application.Services
         {
             var products = await _context.Products
                 .Include(p => p.Images)
-                .Where(p => p.Name.Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                            p.Description.Contains(query, StringComparison.OrdinalIgnoreCase))
-                .ToListAsync();
-
-            return _mapper.Map<IEnumerable<ProductDto>>(products);
-        }
-
-        public async Task<IEnumerable<ProductDto>> GetFeaturedProductsAsync()
-        {
-            var products = await _context.Products
-                .Include(p => p.Images)
-                .Where(p => p.IsFeatured)
+                .Where(p => p.Name.ToLower().Contains(query.ToLower()) ||
+                            p.Description.ToLower().Contains(query.ToLower()))
                 .ToListAsync();
 
             return _mapper.Map<IEnumerable<ProductDto>>(products);
