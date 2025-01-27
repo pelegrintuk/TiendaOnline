@@ -1,14 +1,16 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Text.Json;
 using TiendaOnline.Application;
 using TiendaOnline.Application.Interfaces;
 using TiendaOnline.Application.Mapping;
 using TiendaOnline.Application.Services;
+using TiendaOnline.Core.Entities;
 using TiendaOnline.DAL;
 using TiendaOnline.DAL.Data;
-using TiendaOnline.Core.Entities;
 using TiendaOnline.Infrastructure.Email;
-using Microsoft.OpenApi.Models;
+using TiendaOnline.Infrastructure.Logging; // Asegúrate de importar el espacio de nombres correcto
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,13 +25,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configuración del cliente HTTP
-builder.Services.AddHttpClient("ApiClient", client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7248/");
-    client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-});
-
 // Registro de AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
@@ -38,6 +33,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IEmailService, EmailService>(); // Registro de IEmailService
+builder.Services.AddScoped<ILogService, LogService>(); // Registro de ILogService
 
 // Configuración de cookies de autenticación
 builder.Services.ConfigureApplicationCookie(options =>
@@ -50,8 +46,17 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.Lax;
 });
 
-// Habilitar controladores con vistas
-builder.Services.AddControllersWithViews();
+// **Configuración de HttpClient**
+builder.Services.AddHttpClient("ApiClient", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7248/"); // Asegúrate de que esta es la URL base correcta de tu API
+})
+.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+{
+    ClientCertificateOptions = ClientCertificateOption.Manual,
+    ServerCertificateCustomValidationCallback =
+        (httpRequestMessage, cert, certChain, policyErrors) => true
+});
 
 // Configuración del contexto de datos
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -70,6 +75,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "TiendaOnline API", Version = "v1" });
+});
+
+// Configuración de serialización JSON
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 
 var app = builder.Build();
@@ -94,11 +106,7 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllers(); // Asegúrate de mapear los controladores de API
+app.MapControllers();
 
 app.Logger.LogInformation("Backend iniciado correctamente en: {Urls}", app.Urls);
 

@@ -1,9 +1,40 @@
-﻿@{
-    ViewData["Title"] = "Confirmación de Pago";
+﻿   @model TiendaOnline.Application.DTOs.OrderDto
+
+@{
+    ViewData["Title"] = "Confirmación de Pedido";
 }
 
-<h1>Confirmación de Pago</h1>
+<h2>Confirmación de Pedido</h2>
 
-<p>Tu pago ha sido procesado exitosamente. Gracias por tu compra.</p>
+@if (Model != null)
+{
+    <p>Gracias por tu compra. Tu pedido ha sido procesado con éxito.</p>
+    <p>Número de Pedido: @Model.OrderId</p>
+    <p>Fecha: @Model.Date.ToString("dd/MM/yyyy")</p>
+    <p>Estado: @Model.Status</p>
 
-<a href="/" class="btn btn-primary">Volver al Inicio</a>
+    <h3>Productos</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderProducts)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Hubo un problema al procesar tu pedido. Por favor, contacta con el soporte.</p>
+}

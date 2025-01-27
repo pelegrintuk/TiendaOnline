@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using TiendaOnline.Core.Entities;
 using TiendaOnline.Application.DTOs;
+using TiendaOnline.Core.Entities;
 
 namespace TiendaOnline.Application.Mapping
 {
@@ -40,7 +40,9 @@ namespace TiendaOnline.Application.Mapping
                 .ForMember(dest => dest.Total, opt => opt.Ignore());
 
             // Mapeo entre CartItem y CartItemDto
-            CreateMap<CartItem, CartItemDto>();
+            CreateMap<CartItem, CartItemDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price));
             CreateMap<CartItemDto, CartItem>();
         }
     }

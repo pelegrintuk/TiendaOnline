@@ -1,4 +1,9 @@
 ﻿@model TiendaOnline.Application.DTOs.ProductDto
+@using System.Globalization
+
+@{
+    CultureInfo.CurrentCulture = new CultureInfo("es-ES");
+}
 
 @{
     ViewData["Title"] = "Editar Producto";
@@ -10,7 +15,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -18,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -27,23 +32,56 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
                 <input asp-for="Category" class="form-control" />
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsFeatured" class="control-label"></label>
-                <input asp-for="IsFeatured" class="form-control" />
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <input asp-for="IsFeatured" class="form-check-input" type="checkbox" />
+                <label asp-for="IsFeatured" class="form-check-label"></label>
                 <span asp-validation-for="IsFeatured" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <label class="control-label">Imágenes Actuales</label>
+                <div>
+                    @if (Model.Images != null && Model.Images.Any())
+                    {
+                        foreach (var image in Model.Images)
+                        {
+                            <div class="image-container" style="position: relative; display: inline-block; margin-right: 10px;">
+                                <img src="@image.ImageUrl" alt="@Model.Name" class="img-thumbnail" style="width: 100px; height: auto;" />
+                                <div>
+                                    <input type="checkbox" name="ImagesToDelete" value="@image.Id" /> Eliminar
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>No hay imágenes disponibles.</p>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFiles" class="control-label">Imágenes (opcional)</label>
+                <input asp-for="ImageFiles" class="form-control" type="file" multiple />
+                <span asp-validation-for="ImageFiles" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" style="margin-right: 10px;" />
+                <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

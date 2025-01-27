@@ -16,7 +16,12 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5288",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SmtpSettings:Host": "localhost",
+        "SmtpSettings:Port": "2525",
+        "SmtpSettings:Username": "",
+        "SmtpSettings:Password": "",
+        "SmtpSettings:EnableSsl": "false"
       }
     },
     "https": {
@@ -26,7 +31,12 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7248",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SmtpSettings:Host": "localhost",
+        "SmtpSettings:Port": "2525",
+        "SmtpSettings:Username": "",
+        "SmtpSettings:Password": "",
+        "SmtpSettings:EnableSsl": "false"
       }
     },
     "IIS Express": {
@@ -34,7 +44,12 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SmtpSettings:Host": "localhost",
+        "SmtpSettings:Port": "2525",
+        "SmtpSettings:Username": "",
+        "SmtpSettings:Password": "",
+        "SmtpSettings:EnableSsl": "false"
       }
     }
   }

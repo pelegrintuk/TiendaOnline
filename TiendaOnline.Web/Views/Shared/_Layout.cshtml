@@ -6,12 +6,13 @@
     <title>@ViewData["Title"] - TiendaOnline</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/_Layout.cshtml.css" />
     <!-- Agregar Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" href="/">TiendaOnline</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,6 +26,15 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/Products">Productos</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Orders">Órdenes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Users">Usuarios</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <!-- Enlace al carrito con icono -->
@@ -64,15 +74,15 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted mt-4">
+    <footer class="border-top footer text-muted mt-4 bg-dark text-white">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    &copy; 2023 - TiendaOnline - <a href="/Privacy">Privacidad</a>
+                    &copy; @DateTime.Now.Year - TiendaOnline - <a href="/Privacy" class="text-white">Privacidad</a>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="/Home/About">Acerca de Nosotros</a> |
-                    <a href="/Home/Contact">Contacto</a>
+                    <a href="/Home/About" class="text-white">Acerca de Nosotros</a> |
+                    <a href="/Home/Contact" class="text-white">Contacto</a>
                 </div>
             </div>
         </div>
@@ -81,5 +91,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

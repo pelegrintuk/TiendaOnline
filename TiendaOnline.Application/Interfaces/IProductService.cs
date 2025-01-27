@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TiendaOnline.Application.DTOs;
+﻿using TiendaOnline.Application.DTOs;
 
 namespace TiendaOnline.Application.Interfaces
 {

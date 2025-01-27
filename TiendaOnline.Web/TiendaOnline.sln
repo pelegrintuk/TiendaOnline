@@ -26,6 +26,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TiendaOnline.Services", "..
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiendaOnline.Tests", "..\TiendaOnline.Tests\TiendaOnline.Tests.csproj", "{25AF0EEA-3719-4572-AC1E-E2396F183FD8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{46E934C5-4CA3-4F54-AAB6-8587017997D1} = {46E934C5-4CA3-4F54-AAB6-8587017997D1}
+		{6F586986-CB33-41C4-ABF5-9F113C350C66} = {6F586986-CB33-41C4-ABF5-9F113C350C66}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

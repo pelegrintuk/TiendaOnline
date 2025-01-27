@@ -47,9 +47,9 @@
                 <input type="hidden" name="productId" value="@Model.Id" />
                 <div class="form-group">
                     <label for="quantity">Cantidad:</label>
-                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="@Model.Stock" />
+                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="@Model.Stock" @(Model.Stock == 0 ? "disabled" : "") />
                 </div>
-                <button type="submit" class="btn btn-primary mt-2">Añadir al Carrito</button>
+                <button type="submit" class="btn btn-primary mt-2" @(Model.Stock == 0 ? "disabled" : "")>Añadir al Carrito</button>
             </form>
             <a href="@Url.Action("Index", "Products")" class="btn btn-secondary mt-2">Volver a la Lista</a>
         </div>

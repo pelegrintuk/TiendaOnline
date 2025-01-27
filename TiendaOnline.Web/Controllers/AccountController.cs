@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using TiendaOnline.Application.DTOs;
 using TiendaOnline.Application.Interfaces;
 using TiendaOnline.Core.Entities;
@@ -18,13 +16,15 @@ namespace TiendaOnline.Web.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IOrderService _orderService;
+        private readonly ILogService _logService;
 
-        public AccountController(IHttpClientFactory httpClientFactory, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IOrderService orderService)
+        public AccountController(IHttpClientFactory httpClientFactory, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IOrderService orderService, ILogService logService)
         {
             _httpClientFactory = httpClientFactory;
             _signInManager = signInManager;
             _userManager = userManager;
             _orderService = orderService;
+            _logService = logService;
         }
 
         public async Task<IActionResult> Profile()
@@ -40,6 +40,7 @@ namespace TiendaOnline.Web.Controllers
 
             if (user == null)
             {
+                _logService.LogError("User not found", new Exception("User not found"));
                 return NotFound();
             }
 
@@ -87,6 +88,7 @@ namespace TiendaOnline.Web.Controllers
             // Leer el mensaje de error de la API
             var errorResponse = await response.Content.ReadAsStringAsync();
             TempData["ErrorMessage"] = !string.IsNullOrEmpty(errorResponse) ? errorResponse : "Error al iniciar sesión.";
+            _logService.LogError("Error al iniciar sesión", new Exception(errorResponse));
             return View(loginDto);
         }
 
@@ -125,12 +127,16 @@ namespace TiendaOnline.Web.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = string.Join(", ", result.Errors.Select(e => e.Description));
+                    var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                    TempData["ErrorMessage"] = errorMessage;
+                    _logService.LogError("Error al registrar el usuario", new Exception(errorMessage));
                 }
             }
             else
             {
-                TempData["ErrorMessage"] = "Error al registrar el usuario.";
+                var errorMessage = "Error al registrar el usuario.";
+                TempData["ErrorMessage"] = errorMessage;
+                _logService.LogError(errorMessage, new Exception(errorMessage));
             }
 
             return View(registerDto);
@@ -149,10 +155,17 @@ namespace TiendaOnline.Web.Controllers
             }
             else
             {
-                TempData["ErrorMessage"] = "Error al cerrar sesión.";
+                var errorMessage = "Error al cerrar sesión.";
+                TempData["ErrorMessage"] = errorMessage;
+                _logService.LogError(errorMessage, new Exception(errorMessage));
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

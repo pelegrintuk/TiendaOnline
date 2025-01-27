@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
-using TiendaOnline.Application.Interfaces;
-using TiendaOnline.Application.DTOs;
-using TiendaOnline.Core.Entities;
-using TiendaOnline.DAL;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TiendaOnline.Application.DTOs;
+using TiendaOnline.Application.Interfaces;
+using TiendaOnline.Core.Entities;
 using TiendaOnline.DAL.Data;
 using Microsoft.Extensions.Logging;
 

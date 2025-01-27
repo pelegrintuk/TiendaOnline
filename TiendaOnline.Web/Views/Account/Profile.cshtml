@@ -23,7 +23,7 @@ else
                     <div class="card-body">
                         <p><strong>Nombre de Usuario:</strong> @Model.Name</p>
                         <p><strong>Correo Electrónico:</strong> @Model.Email</p>
-                        <p><strong>Dirección:</strong> @Model.Address.Street, @Model.Address.City, @Model.Address.State, @Model.Address.ZipCode, @Model.Address.Country</p>
+                        <p><strong>Dirección:</strong> @($"{Model.Address?.Street}, {Model.Address?.City}, {Model.Address?.State}, {Model.Address?.ZipCode}, {Model.Address?.Country}")</p>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@ else
                         <h4>Mis Pedidos</h4>
                     </div>
                     <div class="card-body">
-                        @if (Model.Orders != null && Model.Orders.Any())
+                        @if (Model.Orders?.Any() == true)
                         {
                             <table class="table table-striped table-hover">
                                 <thead>

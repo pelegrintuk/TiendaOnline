@@ -1,25 +1,26 @@
 ﻿@model TiendaOnline.Application.DTOs.CartDto
-@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Carrito de Compras";
 }
 
-<h1>Carrito de Compras</h1>
+<div class="container mt-5">
+    <h2 class="text-center">Carrito de Compras</h2>
 
-<div id="cart-container">
-    @if (Model.Items == null || !Model.Items.Any())
+    <!-- Mensajes de error -->
+    @if (TempData["ErrorMessage"] != null)
     {
-        <p>El carrito está vacío.</p>
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
     }
-    else
+
+    @if (Model.Items.Any())
     {
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th>Producto</th>
-                    <th>Precio</th>
                     <th>Cantidad</th>
+                    <th>Precio</th>
                     <th>Total</th>
                     <th>Acciones</th>
                 </tr>
@@ -29,36 +30,36 @@
                 {
                     <tr>
                         <td>@item.ProductName</td>
-                        <td>@item.Price.ToString("C")</td>
                         <td>@item.Quantity</td>
+                        <td>@item.Price.ToString("C")</td>
                         <td>@item.TotalPrice.ToString("C")</td>
                         <td>
-                            <button class="btn btn-danger" onclick="removeFromCart(@item.ProductId)">Eliminar</button>
+                            <form asp-action="RemoveFromCart" method="post" class="d-inline">
+                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-        <p><strong>Total: @Model.Total.ToString("C")</strong></p>
-        <a href="/Orders/Checkout" class="btn btn-success">Proceder al Pago</a>
+
+        <div class="text-end">
+            <h4>Total: @Model.Total.ToString("C")</h4>
+            <form asp-action="ClearCart" method="post" class="d-inline">
+                <button type="submit" class="btn btn-warning">Vaciar Carrito</button>
+            </form>
+            <a asp-action="Checkout" asp-controller="Orders" class="btn btn-primary">Proceder al Pago</a>
+        </div>
+    }
+    else
+    {
+        <p class="text-center">Tu carrito está vacío.</p>
     }
 </div>
 
-<script>
-    const userId = '@(User.Identity.IsAuthenticated ? User.FindFirstValue(ClaimTypes.NameIdentifier) : Context.Request.Cookies["TempUserId"])'; // Usuario autenticado o temporal
-
-    async function removeFromCart(productId) {
-        console.log(`Intentando eliminar el producto con ID: ${productId} para el usuario: ${userId}`);
-        try {
-            const response = await fetch(`/api/Cart/${userId}/items/${productId}`, { method: 'DELETE' });
-            if (response.ok) {
-                console.log('Producto eliminado correctamente');
-                location.reload(); // Recargar la página para actualizar el carrito
-            } else {
-                console.error('Error al eliminar el producto:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-</script>
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

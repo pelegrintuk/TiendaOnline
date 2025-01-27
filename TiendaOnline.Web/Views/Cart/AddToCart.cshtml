@@ -1,0 +1,38 @@
+﻿@model TiendaOnline.Application.DTOs.CartItemDto
+
+@{
+    ViewData["Title"] = "Añadir al Carrito";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Añadir al Carrito</h2>
+
+    <!-- Mensajes de error -->
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Formulario -->
+    <form asp-action="AddToCart" method="post" class="needs-validation mt-4" novalidate>
+        <div class="mb-3">
+            <label asp-for="ProductId" class="form-label"></label>
+            <input asp-for="ProductId" class="form-control" required />
+            <span asp-validation-for="ProductId" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Quantity" class="form-label"></label>
+            <input asp-for="Quantity" class="form-control" required />
+            <span asp-validation-for="Quantity" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Añadir al Carrito</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

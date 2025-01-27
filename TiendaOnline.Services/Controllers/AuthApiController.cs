@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TiendaOnline.Application.DTOs;
 using TiendaOnline.Core.Entities;
 using TiendaOnline.Services.DTOs;
-using TiendaOnline.Application.DTOs;
 
 namespace TiendaOnline.Services.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class AuthController : Controller
+    [Route("api/Auth")]
+    public class AuthApiController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AuthApiController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;

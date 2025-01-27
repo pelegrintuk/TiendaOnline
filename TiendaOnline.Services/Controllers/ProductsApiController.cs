@@ -1,20 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TiendaOnline.DAL.Data;
-using TiendaOnline.Core.Entities;
-using AutoMapper;
 using TiendaOnline.Application.DTOs;
+using TiendaOnline.Core.Entities;
+using TiendaOnline.DAL.Data;
 
 namespace TiendaOnline.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    [Route("api/Products")]
+    public class ProductsApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public ProductsController(ApplicationDbContext context, IMapper mapper)
+        public ProductsApiController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;

@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TiendaOnline.Application.Interfaces;
 using TiendaOnline.Application.DTOs;
+using TiendaOnline.Application.Interfaces;
 
 namespace TiendaOnline.Services.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController : Controller
+    [Route("api/Users")]
+    public class UsersApiController : ControllerBase
     {
         private readonly IUserService _userService;
 
-        public UsersController(IUserService userService)
+        public UsersApiController(IUserService userService)
         {
             _userService = userService;
         }

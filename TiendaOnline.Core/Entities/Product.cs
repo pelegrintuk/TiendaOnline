@@ -1,18 +1,14 @@
-﻿using System.Collections.Generic;
-
-namespace TiendaOnline.Core.Entities
+﻿namespace TiendaOnline.Core.Entities
 {
     public class Product
     {
         public int ProductId { get; set; }
-        public required string Name { get; set; }
-        public required string Description { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
         public int Stock { get; set; }
         public string Category { get; set; }
-        public required ICollection<OrderProduct> OrderProducts { get; set; } // Relación con pedidos
-
-        // Relación con imágenes
+        public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
         public bool IsFeatured { get; set; }
     }

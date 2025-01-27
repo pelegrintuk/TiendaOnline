@@ -11,7 +11,12 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SmtpSettings:Host": "localhost",
+        "SmtpSettings:Port": "2525",
+        "SmtpSettings:Username": "",
+        "SmtpSettings:Password": "",
+        "SmtpSettings:EnableSsl": "false"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7242;http://localhost:5242"

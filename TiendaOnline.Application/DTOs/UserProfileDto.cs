@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TiendaOnline.Application.DTOs
+﻿namespace TiendaOnline.Application.DTOs
 {
     public class UserProfileDto
     {

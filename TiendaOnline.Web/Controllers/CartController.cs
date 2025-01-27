@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TiendaOnline.Application.DTOs;
-using Microsoft.Extensions.Logging;
 
 namespace TiendaOnline.Web.Controllers
 {
@@ -36,6 +36,7 @@ namespace TiendaOnline.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> AddToCart(int productId, int quantity)
         {
             var userId = GetUserId();

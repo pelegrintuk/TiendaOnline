@@ -5,7 +5,17 @@
         <div class="col-md-6">
             <h2 class="text-center">Iniciar Sesión</h2>
 
-            <!-- Mensajes de error -->
+            <!-- Mensajes de éxito y error -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <!-- Mensajes de error del ModelState -->
             @if (!ViewData.ModelState.IsValid)
             {
                 @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
@@ -15,25 +25,19 @@
             }
 
             <!-- Formulario -->
-            <form method="post" action="/Account/Login" class="needs-validation mt-4" novalidate>
+            <form asp-action="Login" asp-controller="Account" method="post" class="needs-validation mt-4" novalidate>
                 <!-- Usuario -->
                 <div class="mb-3">
-                    <label for="username" class="form-label">Usuario</label>
-                    <input type="text" id="username" name="Username" class="form-control" value="@Model?.Username" required />
-                    <div class="invalid-feedback">Por favor, introduce un nombre de usuario.</div>
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <!-- Contraseña -->
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" id="password" name="Password" class="form-control" required />
-                    <div class="invalid-feedback">Por favor, introduce una contraseña.</div>
-                </div>
-
-                <!-- Recordarme -->
-                <div class="mb-3 form-check">
-                    <input type="checkbox" id="rememberMe" name="RememberMe" class="form-check-input" />
-                    <label for="rememberMe" class="form-check-label">Recordarme</label>
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" type="password" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <!-- Botón de inicio de sesión -->
@@ -42,3 +46,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

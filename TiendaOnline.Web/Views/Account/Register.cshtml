@@ -23,59 +23,59 @@
             }
 
             <!-- Formulario -->
-            <form method="post" action="/Account/Register" class="needs-validation mt-4" novalidate>
+            <form asp-action="Register" asp-controller="Account" method="post" class="needs-validation mt-4" novalidate>
                 <!-- Usuario -->
                 <div class="mb-3">
-                    <label for="username" class="form-label">Usuario</label>
-                    <input type="text" id="username" name="Username" class="form-control" value="@Model?.Username" required />
-                    <div class="invalid-feedback">Por favor, introduce un nombre de usuario.</div>
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-control" required />
+                    <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <!-- Correo electrónico -->
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo electrónico</label>
-                    <input type="email" id="email" name="Email" class="form-control" value="@Model?.Email" required />
-                    <div class="invalid-feedback">Por favor, introduce un correo electrónico válido.</div>
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" required />
+                    <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
                 <!-- Contraseña -->
                 <div class="mb-3">
-                    <label for="password" class="form-label">Contraseña</label>
-                    <input type="password" id="password" name="Password" class="form-control" required />
-                    <div class="invalid-feedback">Por favor, introduce una contraseña.</div>
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" required />
+                    <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <!-- Dirección -->
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="street" class="form-label">Calle</label>
-                        <input type="text" id="street" name="Street" class="form-control" value="@Model?.Street" required />
-                        <div class="invalid-feedback">Por favor, introduce una calle válida.</div>
+                        <label asp-for="Street" class="form-label"></label>
+                        <input asp-for="Street" class="form-control" required />
+                        <span asp-validation-for="Street" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="city" class="form-label">Ciudad</label>
-                        <input type="text" id="city" name="City" class="form-control" value="@Model?.City" required />
-                        <div class="invalid-feedback">Por favor, introduce una ciudad válida.</div>
+                        <label asp-for="City" class="form-label"></label>
+                        <input asp-for="City" class="form-control" required />
+                        <span asp-validation-for="City" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="state" class="form-label">Estado</label>
-                        <input type="text" id="state" name="State" class="form-control" value="@Model?.State" required />
-                        <div class="invalid-feedback">Por favor, introduce un estado válido.</div>
+                        <label asp-for="State" class="form-label"></label>
+                        <input asp-for="State" class="form-control" required />
+                        <span asp-validation-for="State" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="zipCode" class="form-label">Código postal</label>
-                        <input type="text" id="zipCode" name="ZipCode" class="form-control" value="@Model?.ZipCode" required />
-                        <div class="invalid-feedback">Por favor, introduce un código postal válido.</div>
+                        <label asp-for="ZipCode" class="form-label"></label>
+                        <input asp-for="ZipCode" class="form-control" required />
+                        <span asp-validation-for="ZipCode" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label for="country" class="form-label">País</label>
-                    <input type="text" id="country" name="Country" class="form-control" value="@Model?.Country" required />
-                    <div class="invalid-feedback">Por favor, introduce un país válido.</div>
+                    <label asp-for="Country" class="form-label"></label>
+                    <input asp-for="Country" class="form-control" required />
+                    <span asp-validation-for="Country" class="text-danger"></span>
                 </div>
 
                 <!-- Botón de registro -->
@@ -84,3 +84,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

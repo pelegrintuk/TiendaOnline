@@ -11,19 +11,8 @@
         {
             foreach (var product in Model)
             {
-                var imageUrl = product.Images?.FirstOrDefault()?.ImageUrl;
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
-                        @if (!string.IsNullOrEmpty(imageUrl))
-                        {
-                            <img src="@imageUrl" class="card-img-top" alt="@product.Name" style="max-height: 200px; object-fit: cover;">
-                        }
-                        else
-                        {
-                            <div class="card-img-top" style="max-height: 200px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
-                                <span class="text-muted">Imagen no disponible</span>
-                            </div>
-                        }
                         <div class="card-body">
                             <h5 class="card-title">@product.Name</h5>
                             <p class="card-text text-truncate">@product.Description</p>
@@ -66,5 +55,4 @@
         <input type="text" name="query" class="form-control" placeholder="Buscar productos..." />
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
-
 </div>
